@@ -1,5 +1,6 @@
 package com.apexcomputerservice.legotracker;
 
+import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
@@ -12,33 +13,27 @@ import com.apexcomputerservice.legotracker.model.Chain;
 import java.util.ArrayList;
 import java.util.List;
 
+
 /**
  * Created by Chris on 2/18/2017.
  */
 
 public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainViewHolder> {
 
-    public static class ChainViewHolder extends RecyclerView.ViewHolder{
-
-        CardView cv;
-        TextView chainName;
 
 
-        ChainViewHolder(View itemView){
-            super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv_chain);
-            chainName = (TextView)itemView.findViewById(R.id.chain_name);
-        }
-    }
-
-    DatabaseHelper myDatabaseHelper = new DatabaseHelper(RVAdapterChain.this);
+   /* DatabaseHelper myDatabaseHelper = new DatabaseHelper(RVAdapterChain.this);
     myDatabaseHelper.openReadableDB();
     List<Chain> chains = myDatabaseHelper.getChains();
     myDatabaseHelper.closeDB();
 
-    //ArrayList<Chain> chains;
+    */
 
-    RVAdapterChain(ArrayList<Chain> chains){
+   public List<Chain> chains;
+
+
+    public RVAdapterChain(List<Chain> chains){
+
         this.chains=chains;
     }
 
@@ -66,4 +61,20 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
     public int getItemCount(){
         return chains.size();
     }
+
+
+    public static class ChainViewHolder extends RecyclerView.ViewHolder{
+
+        CardView cv;
+        TextView chainName;
+
+
+        ChainViewHolder(View itemView){
+            super(itemView);
+            cv = (CardView)itemView.findViewById(R.id.cv_chain);
+            chainName = (TextView)itemView.findViewById(R.id.chain_name);
+        }
+    }
 }
+
+
