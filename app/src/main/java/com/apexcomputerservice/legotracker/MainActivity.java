@@ -34,17 +34,18 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
     private TabLayout tabLayout;
     private ViewPager viewPager;
+    private NavigationView navigationView;
 
 
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+        setContentView(R.layout.test_layout);
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
-
+/*
         FloatingActionButton fab = (FloatingActionButton) findViewById(R.id.fab);
         fab.setOnClickListener(new View.OnClickListener(){
            @Override
@@ -52,11 +53,14 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
                Snackbar.make(view, "Replace with your own action", Snackbar.LENGTH_LONG).setAction("Action", null).show();
             }
          });
-
+*/
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);
         ActionBarDrawerToggle toggle = new ActionBarDrawerToggle(this,drawer,toolbar,R.string.drawer_open,R.string.drawer_closed);
         drawer.addDrawerListener(toggle);
         toggle.syncState();
+        navigationView = (NavigationView) findViewById(R.id.navigation_view);
+        navigationView.setNavigationItemSelectedListener(this);
+
 
         viewPager = (ViewPager) findViewById(R.id.viewpager);
         setupViewPager(viewPager);
@@ -92,12 +96,13 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         //Handle navigation view item clicks here
         int id = item.getItemId();
 
+
         Intent intent;
         switch (id) {
-            case 0:
+            case R.id.nav_chains:
                 intent = new Intent(this, ShowChains.class);
                 startActivity(intent);
-                finish();
+
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

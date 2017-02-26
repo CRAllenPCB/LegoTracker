@@ -141,6 +141,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         onCreate(db);
     }
 
+    public boolean isTableEmpty(String tableName){
+        SQLiteDatabase db = this.getReadableDatabase();
+        String count = "SELECT count(*) FROM " + tableName;
+        Cursor c = db.rawQuery(count,null);
+        c.moveToFirst();
+        int icount = c.getInt(0);
+        c.close();
+        if (icount>0){
+            return false;}
+        else {return true;}
+
+
+    }
+
     // ***********************Add to tables**************************
 
     public void addChain(Chain chain){

@@ -24,4 +24,13 @@
     <string name="nav_stores">Stores</string>
     <string name="nav_inv">Inventory</string>
 
+    <!-- Empty table strings -->
+    <string name="empty_chains">No chains found</string>
+
+    <!-- Label strings -->
+    <string name="label_chains">Store Chains</string>
+
+
+
+
 </resources>

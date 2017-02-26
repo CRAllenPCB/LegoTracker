@@ -7,15 +7,25 @@
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:supportsRtl="true"
-        android:theme="@style/MyMaterialTheme">
-        <activity android:name=".MainActivity">
+        android:theme="@style/AppTheme.NoActionBar">
+        <activity android:name="com.apexcomputerservice.legotracker.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ShowChains"></activity>
+
+        <activity
+            android:name="com.apexcomputerservice.legotracker.ShowChains"
+            android:label="@string/label_chains"
+            android:parentActivityName="com.apexcomputerservice.legotracker.MainActivity" >
+            <!-- Parent activity meta-data to support 4.0 and lower -->
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value="com.apexcomputerservice.legotracker.MainActivity" />
+        </activity>
+
     </application>
 
 </manifest>
