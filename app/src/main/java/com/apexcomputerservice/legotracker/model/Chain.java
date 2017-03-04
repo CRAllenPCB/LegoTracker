@@ -1,5 +1,9 @@
 package com.apexcomputerservice.legotracker.model;
 
+import android.util.Log;
+
+import static android.content.ContentValues.TAG;
+
 /**
  * Created by chris on 2/3/17.
  */
@@ -8,6 +12,7 @@ public class Chain {
     //private variables
     int chainid;
     String chainName;
+    String TAG = "SQLInputCheck";
 
     //Empty constructor
     public Chain() {
@@ -33,5 +38,6 @@ public class Chain {
 
     public void setChainName(String chainName) {
         this.chainName = chainName;
+            Log.v(TAG, "Chain obj name is " + getChainName() );
     }
 }

@@ -14,18 +14,18 @@
         android:orientation="vertical">
 
 
-    <android.support.design.widget.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:theme="@style/AppTheme.AppBarOverlay">
-
-        <android.support.v7.widget.Toolbar
-            android:id="@+id/toolbar"
+        <android.support.design.widget.AppBarLayout
             android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="?attr/colorPrimary"
-            android:theme="@style/AppTheme.AppBarOverlay"
-            app:popupTheme="@style/AppTheme.PopupOverlay" />
+            android:layout_height="wrap_content"
+            app:theme="@style/AppTheme.AppBarOverlay">
+
+            <android.support.v7.widget.Toolbar
+                android:id="@+id/toolbar"
+                android:layout_width="match_parent"
+                android:layout_height="?attr/actionBarSize"
+                android:background="?attr/colorPrimary"
+                android:theme="@style/AppTheme.AppBarOverlay"
+                app:popupTheme="@style/AppTheme.PopupOverlay" />
 
 
 
@@ -36,26 +36,35 @@
 
 
         <android.widget.TextView
-            android:id="@+id/emptyTextView"
-            android:text="@string/empty_chains"
+            android:id="@+id/tvAddDirections"
+            android:text="@string/add_chains_directions"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:gravity="center_horizontal"
             android:textStyle="bold"
-            android:textSize="24sp">
+            >
 
         </android.widget.TextView>
 
-
-        <android.support.v7.widget.RecyclerView
+        <EditText
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:id="@+id/rv"
-            />
+            android:id="@+id/etAddChain"
+            android:hint="Wal-Mart"
+            android:textColorHint="@color/asmGray"
+            android:gravity="center_horizontal|center_vertical"
+            android:selectAllOnFocus="true" />
 
 
 
 
+
+
+
+
+
+
+    </LinearLayout>
 
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/fab"
@@ -63,10 +72,8 @@
         android:layout_height="wrap_content"
         android:layout_gravity="bottom|end"
         android:layout_margin="@dimen/fab_margin"
-        app:srcCompat="@drawable/ic_add_black_24dp"
+        app:srcCompat="@drawable/ic_save_black_24dp"
         android:tint="@color/white"/>
-
-    </LinearLayout>
 
 
 

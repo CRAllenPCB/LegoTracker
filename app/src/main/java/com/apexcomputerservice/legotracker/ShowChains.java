@@ -29,7 +29,7 @@ public class ShowChains extends AppCompatActivity {
     RecyclerView mRecyclerView;
     private RecyclerView.Adapter mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
-    String chainTable;//Name of the chainTable
+    private final static String TABLE_NAME ="chain";//Name of the chainTable
     boolean emptyTable;
     TextView emptyTextView;
     Toolbar toolbar;
@@ -38,7 +38,6 @@ public class ShowChains extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_show_chains);
-
 
         Toolbar toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
@@ -58,26 +57,35 @@ public class ShowChains extends AppCompatActivity {
         fab.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view) {
-
-
+                //call Add Chains here
+                startActivity(new Intent(ShowChains.this, AddChains.class));
             }
         });
 
+        populateView();
+
+    }
+
+    @Override
+    public void onRestart(){
+        super.onRestart();
+        populateView();
+    }
 
 
-
-
+    public void populateView(){
         //Check that table is populate
-        chainTable="chain";
+
         helper = new DatabaseHelper(this);
         helper.openReadableDB();
-        emptyTable = helper.isTableEmpty(chainTable);
+        emptyTable = helper.isTableEmpty(TABLE_NAME);
         helper.closeDB();
         if(emptyTable){
             emptyTextView = (TextView) findViewById(R.id.emptyTextView);
+            emptyTextView.setVisibility(View.VISIBLE);
         }else {
-
-
+            emptyTextView = (TextView) findViewById(R.id.emptyTextView);
+            emptyTextView.setVisibility(View.GONE);
             helper = new DatabaseHelper(this);
             chainList = new ArrayList<Chain>();
             helper.openReadableDB();
@@ -90,10 +98,9 @@ public class ShowChains extends AppCompatActivity {
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
 
-            mAdapter = new RVAdapterChain(chainList);
+            mAdapter = new RVAdapterChain(this,chainList);
             mRecyclerView.setAdapter(mAdapter);
         }
-
 
     }
 

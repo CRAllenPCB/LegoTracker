@@ -3,6 +3,7 @@ package com.apexcomputerservice.legotracker;
 import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -14,27 +15,40 @@ import java.util.ArrayList;
 import java.util.List;
 
 
+
 /**
  * Created by Chris on 2/18/2017.
  */
 
 public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainViewHolder> {
 
+    public class ChainViewHolder extends RecyclerView.ViewHolder{
+
+        public CardView cv;
+        public TextView chainNameTextView;
 
 
-   /* DatabaseHelper myDatabaseHelper = new DatabaseHelper(RVAdapterChain.this);
-    myDatabaseHelper.openReadableDB();
-    List<Chain> chains = myDatabaseHelper.getChains();
-    myDatabaseHelper.closeDB();
 
-    */
+        public ChainViewHolder(View itemView){
+            super(itemView);
+            cv = (CardView)itemView.findViewById(R.id.cv_chain);
+            chainNameTextView = (TextView)itemView.findViewById(R.id.chain_name);
+        }
+    }
 
-   public List<Chain> chains;
+    private List<Chain> chains;
+    private Context context;
+
+    public String TAG="SQLInputCheck";
 
 
-    public RVAdapterChain(List<Chain> chains){
-
+    public RVAdapterChain(Context context,List<Chain> chains){
         this.chains=chains;
+        this.context=context;
+    }
+
+    private Context getContext(){
+        return context;
     }
 
     @Override
@@ -43,18 +57,24 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
     }
 
     @Override
-    public ChainViewHolder onCreateViewHolder(ViewGroup viewGroup, int i){
-
-
-
-        View v = LayoutInflater.from(viewGroup.getContext()).inflate(R.layout.item_chain,viewGroup,false);
-        ChainViewHolder cvh = new ChainViewHolder(v);
+    public RVAdapterChain.ChainViewHolder onCreateViewHolder(ViewGroup viewGroup, int position){
+        Context context = viewGroup.getContext();
+        LayoutInflater inflater = LayoutInflater.from(context);
+        //Inflate custom layout
+        View chainview = inflater.inflate(R.layout.item_chain, viewGroup, false);
+        //Return a new holder instance
+        ChainViewHolder cvh = new ChainViewHolder(chainview);
         return cvh;
-    }
+     }
 
     @Override
-    public void onBindViewHolder(ChainViewHolder chainViewHolder, int i){
-        chainViewHolder.chainName.setText(chains.get(i).getChainName());
+    public void onBindViewHolder(RVAdapterChain.ChainViewHolder chainViewHolder, int position){
+        //Get the data model based on position
+        Chain chain = chains.get(position);
+            Log.v(TAG,"VH position is" + String.valueOf(position));
+        //Set item views based on your view and data model
+        TextView chainTextView = chainViewHolder.chainNameTextView;
+        chainTextView.setText(chain.getChainName());
     }
 
     @Override
@@ -63,18 +83,7 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
     }
 
 
-    public static class ChainViewHolder extends RecyclerView.ViewHolder{
 
-        CardView cv;
-        TextView chainName;
-
-
-        ChainViewHolder(View itemView){
-            super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv_chain);
-            chainName = (TextView)itemView.findViewById(R.id.chain_name);
-        }
-    }
 }
 
 
