@@ -57,24 +57,29 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
     }
 
     @Override
-    public RVAdapterChain.ChainViewHolder onCreateViewHolder(ViewGroup viewGroup, int position){
-        Context context = viewGroup.getContext();
+    public RVAdapterChain.ChainViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+        Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         //Inflate custom layout
-        View chainview = inflater.inflate(R.layout.item_chain, viewGroup, false);
+        View chainview = inflater.inflate(R.layout.item_chain, parent, false);
         //Return a new holder instance
-        ChainViewHolder cvh = new ChainViewHolder(chainview);
-        return cvh;
+        ChainViewHolder viewHolder = new ChainViewHolder(chainview);
+        return viewHolder;
      }
 
     @Override
-    public void onBindViewHolder(RVAdapterChain.ChainViewHolder chainViewHolder, int position){
+    public void onBindViewHolder(RVAdapterChain.ChainViewHolder holder, int position){
+       holder.chainNameTextView.setText(chains.get(position).getChainName());
+
+
+       /*
         //Get the data model based on position
         Chain chain = chains.get(position);
             Log.v(TAG,"VH position is" + String.valueOf(position));
         //Set item views based on your view and data model
-        TextView chainTextView = chainViewHolder.chainNameTextView;
+        TextView chainTextView = holder.chainNameTextView;
         chainTextView.setText(chain.getChainName());
+        */
     }
 
     @Override
