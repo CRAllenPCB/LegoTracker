@@ -30,7 +30,7 @@ import static java.sql.Types.NULL;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    String TAG = "Tag";
+    String TAG = "SQLInputCheck";
 
     //All Static variables
     //Database Version
@@ -331,9 +331,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Chain> chains = new ArrayList<Chain>();
         String selectQuery = "SELECT * FROM " + TABLE_CHAIN;
 
-        Log.e(TAG, selectQuery);
+        Log.v(TAG, selectQuery);
 
-        SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
 
         //Loop through all rows and add to list
@@ -341,7 +341,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             do {
                 Chain ch = new Chain();
                 ch.setChainid(c.getInt(c.getColumnIndex(CHAINID)));
-                ch.setChainName(c.getColumnName(c.getColumnIndex(CHAIN_NAME)));
+                ch.setChainName(c.getString(c.getColumnIndex(CHAIN_NAME)));
+                    Log.v(TAG,"DH chain name is " + ch.getChainName() );
 
                 //Add to list
                 chains.add(ch);
