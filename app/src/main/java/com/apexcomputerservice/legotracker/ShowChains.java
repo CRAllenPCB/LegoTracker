@@ -1,5 +1,6 @@
 package com.apexcomputerservice.legotracker;
 
+import android.content.Context;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.design.widget.Snackbar;
@@ -11,10 +12,13 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.ContextMenu;
+import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 import android.support.v4.app.DialogFragment;
+import android.widget.Toast;
 
 
 import com.apexcomputerservice.legotracker.model.Chain;
@@ -33,6 +37,8 @@ public class ShowChains extends AppCompatActivity {
     boolean emptyTable;
     TextView emptyTextView;
     Toolbar toolbar;
+    Context context;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,17 +79,17 @@ public class ShowChains extends AppCompatActivity {
     }
 
 
-    public void populateView(){
+    public void populateView() {
         //Check that table is populate
 
         helper = new DatabaseHelper(this);
         helper.openReadableDB();
         emptyTable = helper.isTableEmpty(TABLE_NAME);
         helper.closeDB();
-        if(emptyTable){
+        if (emptyTable) {
             emptyTextView = (TextView) findViewById(R.id.emptyTextView);
             emptyTextView.setVisibility(View.VISIBLE);
-        }else {
+        } else {
             emptyTextView = (TextView) findViewById(R.id.emptyTextView);
             emptyTextView.setVisibility(View.GONE);
             helper = new DatabaseHelper(this);
@@ -98,11 +104,26 @@ public class ShowChains extends AppCompatActivity {
             mLayoutManager = new LinearLayoutManager(this);
             mRecyclerView.setLayoutManager(mLayoutManager);
 
-            mAdapter = new RVAdapterChain(this,chainList);
+            mAdapter = new RVAdapterChain(this, chainList);
             mRecyclerView.setAdapter(mAdapter);
+
+        }
+    }
+
+        @Override
+        public boolean onContextItemSelected(MenuItem item){
+            if (item.getTitle()=="Edit"){
+                Toast.makeText(this,"Edit selected", Toast.LENGTH_LONG).show();
+            }else if (item.getTitle()=="Delete"){
+                Toast.makeText(this,"Delete selected", Toast.LENGTH_LONG).show();
+            }
+            return super.onContextItemSelected(item);
+
         }
 
-    }
+
+
+
 
 
 }

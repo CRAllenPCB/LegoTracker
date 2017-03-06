@@ -4,9 +4,12 @@ import android.content.Context;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.apexcomputerservice.legotracker.model.Chain;
@@ -22,10 +25,14 @@ import java.util.List;
 
 public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainViewHolder> {
 
-    public class ChainViewHolder extends RecyclerView.ViewHolder{
+    int selectedPos;
+
+    public class ChainViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,View.OnCreateContextMenuListener {
 
         public CardView cv;
         public TextView chainNameTextView;
+        MyLongClickListener longClickListener;
+
 
 
 
@@ -33,7 +40,32 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv_chain);
             chainNameTextView = (TextView)itemView.findViewById(R.id.chain_name);
+
+            itemView.setOnLongClickListener(this);
+            itemView.setOnCreateContextMenuListener(this);
         }
+
+        //Context Menu
+
+        public void setLongClickListener(MyLongClickListener longClickListener){
+            this.longClickListener=longClickListener;
+        }
+
+
+        @Override
+        public boolean onLongClick(View v){
+            this.longClickListener.onLongClick(getLayoutPosition());
+            return false;
+        }
+
+        @Override
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
+            menu.add(0,0,0,"Edit");
+            menu.add(0,1,0,"Delete");
+
+        }
+
+
     }
 
     private List<Chain> chains;
@@ -71,6 +103,15 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
     public void onBindViewHolder(RVAdapterChain.ChainViewHolder holder, int position){
        holder.chainNameTextView.setText(chains.get(position).getChainName());
 
+        holder.setLongClickListener(new MyLongClickListener(){
+            @Override
+            public void onLongClick(int pos){
+                selectedPos=pos;
+            }
+
+        });
+
+
 
        /*
         //Get the data model based on position
@@ -87,6 +128,7 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
         return chains.size();
     }
 
+    //CONTEXT MENU
 
 
 }
