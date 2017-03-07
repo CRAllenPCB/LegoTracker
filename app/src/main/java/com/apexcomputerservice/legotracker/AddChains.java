@@ -86,8 +86,6 @@ public class AddChains extends AppCompatActivity {
                 Log.v(TAG,"newTest = " + newTest);
             helper.addChain(newChain);
             Toast.makeText(getApplicationContext(),"Chain " + chainToAdd +" added", Toast.LENGTH_SHORT).show();
-
-
         }
     }
 

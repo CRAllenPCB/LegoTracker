@@ -31,7 +31,7 @@ public class ShowChains extends AppCompatActivity {
     DatabaseHelper helper;
     List<Chain> chainList;
     RecyclerView mRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    RVAdapterChain mAdapter;
     private RecyclerView.LayoutManager mLayoutManager;
     private final static String TABLE_NAME ="chain";//Name of the chainTable
     boolean emptyTable;
@@ -115,7 +115,7 @@ public class ShowChains extends AppCompatActivity {
             if (item.getTitle()=="Edit"){
                 Toast.makeText(this,"Edit selected", Toast.LENGTH_LONG).show();
             }else if (item.getTitle()=="Delete"){
-                Toast.makeText(this,"Delete selected", Toast.LENGTH_LONG).show();
+                mAdapter.removeChain();
             }
             return super.onContextItemSelected(item);
 

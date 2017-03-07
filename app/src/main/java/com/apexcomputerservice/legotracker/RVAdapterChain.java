@@ -128,7 +128,23 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
         return chains.size();
     }
 
-    //CONTEXT MENU
+   //Delete Chain
+    public void removeChain(){
+        //Get ID
+        Chain c = chains.get(selectedPos);
+        int id =c.getChainid();
+
+        //Delete it from db
+        DatabaseHelper helper = new DatabaseHelper(context);
+        helper.openWriteableDB();
+        //*****Add if condition here to check first for stores and displays associated with Chain
+        // Delete from database
+        helper.deleteChain(id);
+        //Remove from arraylist
+        chains.remove(selectedPos);
+        helper.closeDB();
+        this.notifyItemRemoved(selectedPos);
+    }
 
 
 }
