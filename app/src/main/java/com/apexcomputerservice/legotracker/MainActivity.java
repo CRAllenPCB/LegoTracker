@@ -70,6 +70,9 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        //Used to delete and rebuild store table during testing - to be removed
+       // DatabaseHelper helper = new DatabaseHelper(this);
+       // helper.resetStore();
     }
 
 
@@ -105,7 +108,10 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
             case R.id.nav_chains:
                 intent = new Intent(this, ShowChains.class);
                 startActivity(intent);
-
+                break;
+            case R.id.nav_stores:
+                intent = new Intent(this, ShowStores.class);
+                startActivity(intent);
                 break;
         }
         DrawerLayout drawer = (DrawerLayout) findViewById(R.id.drawer_layout);

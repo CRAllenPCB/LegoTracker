@@ -25,7 +25,11 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.apexcomputerservice.legotracker.MainActivity" />
         </activity>
-        <activity android:name=".AddChains"></activity>
+        <activity android:name=".AddChains"
+            android:windowSoftInputMode="adjustResize"/>
+        <activity android:name=".ShowStores" />
+        <activity android:name=".AddStores"
+            android:windowSoftInputMode="adjustResize"></activity>
     </application>
 
 </manifest>

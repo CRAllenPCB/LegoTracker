@@ -40,4 +40,10 @@ public class Chain {
         this.chainName = chainName;
             Log.v(TAG, "Chain obj name is " + getChainName() );
     }
+
+    //Override toString() so chainName will show in Spinner
+    @Override
+    public String toString(){
+        return this.chainName;
+    }
 }

@@ -101,6 +101,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_STORE = "CREATE TABLE " +
             TABLE_STORE + "(" +
             STOREID + " INTEGER PRIMARY KEY, " +
+            CHAINID + " INTEGER, " +
             STORE_NUM + " TEXT, " +
             STORE_ADD1 + " TEXT, " +
             STORE_ADD2 + " TEXT, " +
@@ -155,6 +156,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    /**
+     *
+     * Reset store database
+     */
+
+    public void resetStore(){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STORE);
+        db.execSQL(CREATE_TABLE_STORE);
+
+
+    }
+
     // ***********************Add to tables**************************
 
     public void addChain(Chain chain){
@@ -201,6 +215,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
+        values.put(CHAINID, store.getChainid());
         values.put(STORE_NUM, store.getStoreNumber());
         values.put(STORE_ADD1, store.getStoreAddress1());
         values.put(STORE_ADD2, store.getStoreAddress2());
@@ -385,9 +400,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return legotypes;
     }
 
+
+
     public List<Store> getStores() {
         List<Store> stores = new ArrayList<Store>();
-        String selectQuery = "SELECT * FROM " + TABLE_STORE;
+        String selectQuery = "SELECT * FROM " + TABLE_STORE +
+                " WHERE CHAINID = " + TABLE_CHAIN +
+                ".CHAINID";
 
         Log.e(TAG, selectQuery);
 

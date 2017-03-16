@@ -26,12 +26,20 @@
 
     <!-- Empty table strings -->
     <string name="empty_chains">No chains found</string>
+    <string name="empty_stores">No stores found</string>
 
     <!-- Label strings -->
     <string name="label_chains">Store Chains</string>
 
     <!-- Add table strings -->
-    <string name="add_chains_directions">Add store retail changes below. Example is "Wal-Mart" or "Target"</string>
+    <string name="add_chains_directions">Add store retail chains below. Example is "Wal-Mart" or "Target"</string>
 
-
+    <!-- Add stores layout strings -->
+    <string name="stores_layout_chain">Chain</string>
+    <string name="stores_layout_store_number">Store Number</string>
+    <string name="stores_layout_address1">Address 1</string>
+    <string name="stores_layout_address2">Address 2</string>
+    <string name="stores_layout_city">City</string>
+    <string name="stores_layout_state">State</string>
+    <string name="stores_layout_zip">Zip Code</string>
 </resources>

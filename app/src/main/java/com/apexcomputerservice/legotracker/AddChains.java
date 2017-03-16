@@ -10,6 +10,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -60,6 +61,9 @@ public class AddChains extends AppCompatActivity {
                 addChainToDatabase();
             }
         });
+
+        //Place FAB above soft keyboard
+        //Add "android:windowSoftInputMode="adjustResize" to activity manifest
 
         addDirections = (TextView) findViewById(R.id.tvAddDirections);
         addChains = (EditText) findViewById(R.id.etAddChain);
