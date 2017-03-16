@@ -372,6 +372,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return chains;
     }
 
+    public Chain getSingleChain(long chainid){
+        //Get single display
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String selectQuery = "SELECT * FROM " + TABLE_CHAIN + " WHERE " + CHAINID + " = " + chainid;
+
+        Log.e(TAG, selectQuery);
+
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c != null)
+            c.moveToFirst();
+
+        Chain chain = new Chain();
+        chain.setChainName(c.getString(c.getColumnIndex(CHAIN_NAME)));
+        if (c !=null && !c.isClosed()) {
+            c.close();
+        }
+
+        return chain;
+
+    }
+
+
     public List<LegoTypes> getLegoTypes() {
         List<LegoTypes> legotypes = new ArrayList<LegoTypes>();
         String selectQuery = "SELECT * FROM " + TABLE_LEGOTYPES;
@@ -405,10 +429,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public List<Store> getStores() {
         List<Store> stores = new ArrayList<Store>();
         String selectQuery = "SELECT * FROM " + TABLE_STORE +
-                " WHERE CHAINID = " + TABLE_CHAIN +
-                ".CHAINID";
+                ", " + TABLE_CHAIN +
+                " WHERE " +
+                TABLE_STORE +".CHAINID = " +
+                TABLE_CHAIN +".CHAINID";
 
-        Log.e(TAG, selectQuery);
+        Log.v(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -425,6 +451,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 s.setStoreCity(c.getString(c.getColumnIndex(STORE_CITY)));
                 s.setStoreState(c.getString(c.getColumnIndex(STORE_STATE)));
                 s.setStoreZip(c.getString(c.getColumnIndex(STORE_ZIP)));
+
 
                 //Add to list
                 stores.add(s);

@@ -1,6 +1,7 @@
 package com.apexcomputerservice.legotracker.adapters;
 
 import android.content.Context;
+import android.provider.ContactsContract;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -15,7 +16,9 @@ import android.widget.TextView;
 import com.apexcomputerservice.legotracker.DatabaseHelper;
 import com.apexcomputerservice.legotracker.MyLongClickListener;
 import com.apexcomputerservice.legotracker.R;
+import com.apexcomputerservice.legotracker.model.Chain;
 import com.apexcomputerservice.legotracker.model.Store;
+import com.facebook.stetho.inspector.protocol.module.Database;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -32,7 +35,7 @@ public class RVAdapterStore extends RecyclerView.Adapter<RVAdapterStore.StoreVie
     public class StoreViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,View.OnCreateContextMenuListener {
 
         public CardView cv;
-        public TextView storeNameTextView;
+        public TextView storeNameTextView , chainNameTextView;
         MyLongClickListener longClickListener;
 
 
@@ -42,6 +45,7 @@ public class RVAdapterStore extends RecyclerView.Adapter<RVAdapterStore.StoreVie
             super(itemView);
             cv = (CardView)itemView.findViewById(R.id.cv_store);
             storeNameTextView = (TextView)itemView.findViewById(R.id.store_name);
+            chainNameTextView = (TextView)itemView.findViewById(R.id.chain_name);
 
             itemView.setOnLongClickListener(this);
             itemView.setOnCreateContextMenuListener(this);
@@ -104,6 +108,11 @@ public class RVAdapterStore extends RecyclerView.Adapter<RVAdapterStore.StoreVie
     @Override
     public void onBindViewHolder(RVAdapterStore.StoreViewHolder holder, int position){
         holder.storeNameTextView.setText(stores.get(position).getStoreNumber());
+        int chainId = stores.get(position).getChainid();
+        Chain chain = new Chain();
+        DatabaseHelper helper = new DatabaseHelper(getContext());
+        String chainName = String.valueOf(helper.getSingleChain(chainId)) + " ";
+        holder.chainNameTextView.setText(chainName);
 
         holder.setLongClickListener(new MyLongClickListener(){
             @Override
