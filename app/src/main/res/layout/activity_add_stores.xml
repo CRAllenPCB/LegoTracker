@@ -166,6 +166,8 @@
                 android:hint="@string/stores_layout_state"
                 android:inputType="textCapCharacters"
                 android:singleLine="true"
+                android:imeOptions="actionNext"
+                android:nextFocusRight="@+id/etZip"
                 android:textColorHint="@color/asmGray"
                 app:layout_constraintLeft_toLeftOf="@+id/tvCity"
                 app:layout_constraintTop_toBottomOf="@+id/tvCity" />
@@ -186,7 +188,7 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:hint="@string/stores_layout_zip"
-                android:imeOptions="actionNext"
+                android:imeOptions="actionDone"
                 android:inputType="number"
                 android:maxLines="1"
                 android:textColorHint="@color/asmGray"
