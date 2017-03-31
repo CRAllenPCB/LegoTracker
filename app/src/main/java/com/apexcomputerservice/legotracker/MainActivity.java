@@ -70,9 +70,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
-        //Used to delete and rebuild store table during testing - to be removed
-       // DatabaseHelper helper = new DatabaseHelper(this);
-       // helper.resetStore();
+        /*
+        Used to delete and rebuild store table during testing - to be removed
+         */
+        DatabaseHelper helper = new DatabaseHelper(this);
+        helper.resetStore();
     }
 
 

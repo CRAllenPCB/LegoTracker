@@ -22,6 +22,9 @@ public class Displays {
     int initalQty;
     int currentQty;
     int resold;
+    int skinid;
+    int chainid;
+    String notes;
 
     //empty constructor
     public Displays(){
@@ -29,7 +32,7 @@ public class Displays {
     }
 
     //constructor
-    public Displays(int placementId, long placementDate, int placementUp, int storeid, int typeid, int initalQty, int currentQty){
+    public Displays(int placementId, long placementDate, int placementUp, int storeid, int typeid, int initalQty, int currentQty, int resold, int skinid, int chainid, String notes){
         this.placementId = placementId;
         this.placementDate = placementDate;
         this.placementUp = placementUp;
@@ -38,6 +41,9 @@ public class Displays {
         this.initalQty = initalQty;
         this.currentQty = currentQty;
         this.resold = resold;
+        this.skinid = skinid;
+        this.chainid = chainid;
+        this.notes = notes;
     }
 
     public int getPlacementId() {
@@ -102,5 +108,29 @@ public class Displays {
 
     public void setResold(int resold) {
         this.resold = resold;
+    }
+
+    public int getSkinid() {
+        return skinid;
+    }
+
+    public void setSkinid(int skinid) {
+        this.skinid = skinid;
+    }
+
+    public int getChainid() {
+        return chainid;
+    }
+
+    public void setChainid(int chainid) {
+        this.chainid = chainid;
+    }
+
+    public String getNotes() {
+        return notes;
+    }
+
+    public void setNotes(String notes) {
+        this.notes = notes;
     }
 }

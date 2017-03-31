@@ -24,6 +24,22 @@
     <string name="nav_stores">Stores</string>
     <string name="nav_inv">Inventory</string>
 
+    <!-- Standard strings -->
+    <string name="chain">Chain</string>
+    <string name="chains">Chains</string>
+    <string name="store">Store</string>
+    <string name="stores">Stores</string>
+    <string name="store_num">Store Num</string>
+    <string name="display">Display</string>
+    <string name="displays">Displays</string>
+    <string name="inventory">Inventory</string>
+    <string name="display_type">Display Type</string>
+    <string name="skin">Skin</string>
+    <string name="skins">Skins</string>
+    <string name="date_placed">Date Placed</string>
+    <string name="number_placed">Number Placed</string>
+    <string name="notes">Notes</string>
+
     <!-- Empty table strings -->
     <string name="empty_chains">No chains found</string>
     <string name="empty_stores">No stores found</string>

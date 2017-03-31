@@ -13,6 +13,7 @@ import com.apexcomputerservice.legotracker.model.Chain;
 import com.apexcomputerservice.legotracker.model.Displays;
 import com.apexcomputerservice.legotracker.model.Inventory;
 import com.apexcomputerservice.legotracker.model.LegoTypes;
+import com.apexcomputerservice.legotracker.model.Skin;
 import com.apexcomputerservice.legotracker.model.Store;
 
 
@@ -55,11 +56,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String INT_QTY = "initalQty";
     private static final String CUR_QTY = "currentQty";
     private static final String RESOLD = "resold";
+    private static final String NOTES = "notes";
 
     //LegoTypes Table Names
     private static final String TABLE_LEGOTYPES = "legotypes";
     private static final String TYPEID = "typeid";
     private static final String TYPE_DESCRIPTION = "typeDescription";
+
+    //Skin Table Names
+    private static final String TABLE_SKINTYPES = "skintypes";
+    private static final String SKINID = "skinid";
+    private static final String SKIN_DESCRIPTION = "skinDescription";
 
     //Store Table Names
     private static final String TABLE_STORE = "stores";
@@ -93,11 +100,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             TYPE + " INTERGER, " +
             INT_QTY + " INTEGER, " +
             CUR_QTY + " INTEGER " +
-            RESOLD + " INTEGER" + ")";
+            RESOLD + " INTEGER " +
+            SKINID + " INTEGER" +
+            NOTES + " TEXT" + ")";
     private static final String CREATE_TABLE_LEGOTYPES = "CREATE TABLE " +
             TABLE_LEGOTYPES + "(" +
             TYPEID + " INTEGER PRIMARY KEY, "+
             TYPE_DESCRIPTION + " TEXT" + ")";
+    private static final String CREATE_TABLE_SKINTYPES = "CREATE TABLE " +
+            TABLE_SKINTYPES + "(" +
+            SKINID + " INTEGER PRIMARY KEY, " +
+            SKIN_DESCRIPTION + " TEXT " + ")";
     private static final String CREATE_TABLE_STORE = "CREATE TABLE " +
             TABLE_STORE + "(" +
             STOREID + " INTEGER PRIMARY KEY, " +
@@ -114,6 +127,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             INV_DESCRIPTION + " TEXT " +
             INV_COUNT + " INTEGER" + ")";
 
+    private static final String POPULATE_SKIN_TABLE = "INSERT INTO " +
+            TABLE_SKINTYPES + " (" +
+            SKIN_DESCRIPTION + ") VALUES " +
+            "(\"None\"), " +
+            "(\"Mayo Onion Dip\"), " +
+            "(\"Mayo Juicy Burger\"), " +
+            "(\"Mayo Holiday\"), " +
+            "(\"Mayo Organic\"), " +
+            "(Lipton Hot Tea\"), " +
+            "(\"Lipton Iced Tea\"), " +
+            "(\"Knorr What's For Dinner\"), " +
+            "(\"Dove 60th\"), " +
+            "(\"Men's NCAA\"), " +
+            "(\"Taking Care of U\")";
+
+    private static final String POPULATE_LEGOTYPE_TABLE = "INSERT INTO " +
+            TABLE_LEGOTYPES + " (" +
+            TYPE_DESCRIPTION + ") VALUES " +
+            "(\"Duplo\"), " +
+            "(\"Lego\"), " +
+            "(\"Mayo Basket\"), " +
+            "(\"ICBINB Basket\"), " +
+            "(\"Butter Bunker\"), " +
+            "(\"Ice Cream Door\") , " +
+            "(\"Redwood Cooler\")";
+
+
+
+
 
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -127,6 +169,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_LEGOTYPES);
         db.execSQL(CREATE_TABLE_STORE);
         db.execSQL(CREATE_INVENTORY_TABLE);
+        db.execSQL(CREATE_TABLE_SKINTYPES);
+        db.execSQL(POPULATE_SKIN_TABLE);
+        db.execSQL(POPULATE_LEGOTYPE_TABLE);
+
     }
 
     @Override
@@ -141,6 +187,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Create new tables
         onCreate(db);
     }
+
+
 
     public boolean isTableEmpty(String tableName){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -159,14 +207,19 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     /**
      *
      * Reset store database
+     *
+     * THIS SHOULD BE REMOVED
      */
 
     public void resetStore(){
         SQLiteDatabase db = this.getWritableDatabase();
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STORE);
-        db.execSQL(CREATE_TABLE_STORE);
-
-
+       // db.execSQL("DROP TABLE IF EXISTS " + TABLE_STORE);
+       // db.execSQL(CREATE_TABLE_STORE);
+        db.execSQL(CREATE_TABLE_SKINTYPES);
+        db.execSQL(POPULATE_SKIN_TABLE);
+        db.execSQL(POPULATE_LEGOTYPE_TABLE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISPLAYS);
+        db.execSQL(CREATE_TABLE_DISPLAYS);
     }
 
     // ***********************Add to tables**************************
@@ -207,6 +260,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(TYPE_DESCRIPTION, legoTypes.getTypeDescription());
 
         db.insert(TABLE_LEGOTYPES, null, values);
+        db.close();
+    }
+
+    public void addSkin(Skin skin){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        values.put(SKIN_DESCRIPTION, skin.getSkinDescription());
+
+        db.insert(TABLE_SKINTYPES, null, values);
         db.close();
     }
 
@@ -424,6 +487,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return legotypes;
     }
 
+    public List<Skin> getSkins(){
+        List<Skin> skintypes = new ArrayList<Skin>();
+        String selectQuery = "SELECT * FROM " + TABLE_SKINTYPES;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        //Loop through all rows and add to list
+        if(c.moveToFirst()){
+            do{
+                Skin s = new Skin();
+                s.setSkinid(c.getInt(c.getColumnIndex(SKINID)));
+                s.setSkinDescription(c.getString(c.getColumnIndex(SKIN_DESCRIPTION)));
+
+                //Add to list
+                skintypes.add(s);
+            } while (c.moveToNext());
+        }
+        if (c != null && !c.isClosed()){
+            c.close();
+        }
+        return skintypes;
+    }
+
 
 
     public List<Store> getStores() {
@@ -433,6 +520,46 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 " WHERE " +
                 TABLE_STORE +".CHAINID = " +
                 TABLE_CHAIN +".CHAINID";
+
+        Log.v(TAG, selectQuery);
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        //Loop through all rows and add to list
+        if (c.moveToFirst()) {
+            do {
+                Store s = new Store();
+                s.setChainid(c.getInt(c.getColumnIndex(CHAINID)));
+                s.setStoreid(c.getInt(c.getColumnIndex(STOREID)));
+                s.setStoreNumber(c.getString(c.getColumnIndex(STORE_NUM)));
+                s.setStoreAddress1(c.getString(c.getColumnIndex(STORE_ADD1)));
+                s.setStoreAddress2(c.getString(c.getColumnIndex(STORE_ADD2)));
+                s.setStoreCity(c.getString(c.getColumnIndex(STORE_CITY)));
+                s.setStoreState(c.getString(c.getColumnIndex(STORE_STATE)));
+                s.setStoreZip(c.getString(c.getColumnIndex(STORE_ZIP)));
+
+
+                //Add to list
+                stores.add(s);
+            } while (c.moveToNext());
+
+        }
+
+        if (c !=null && !c.isClosed()) {
+            c.close();
+        }
+
+        return stores;
+    }
+
+    public List<Store> getChainStores(int chainid) {
+        List<Store> stores = new ArrayList<Store>();
+        String selectQuery = "SELECT * FROM " + TABLE_STORE +
+                ", " + TABLE_CHAIN +
+                " WHERE " +
+                TABLE_STORE +".CHAINID = " +
+                chainid;
 
         Log.v(TAG, selectQuery);
 
