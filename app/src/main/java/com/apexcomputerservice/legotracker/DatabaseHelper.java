@@ -2,6 +2,7 @@ package com.apexcomputerservice.legotracker;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.res.Resources;
 import android.database.Cursor;
 import android.database.SQLException;
 import android.database.sqlite.SQLiteDatabase;
@@ -84,6 +85,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String INV_COUNT = "count";
     private static final String INV_DESCRIPTION = "description";
 
+    //Prodcut Table Names
+    private static final  String TABLE_PRODUCT = "product";
+    private static final String PRODUCT_ID = "productid";
+    private static final String PRODUCT_DECRIPTION = "description";
+
+    //Brand Table Names
+    private static final String TABLE_BRAND = "brand";
+    private static final String BRAND_ID = "brandid";
+    private static final String BRAND_DESCRIPTION = "description";
+
+
 
     //TABLE CREATE STATEMENTS
     private static final String CREATE_TABLE_CHAINS = "CREATE TABLE " +
@@ -106,7 +118,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_LEGOTYPES = "CREATE TABLE " +
             TABLE_LEGOTYPES + "(" +
             TYPEID + " INTEGER PRIMARY KEY, "+
-            TYPE_DESCRIPTION + " TEXT" + ")";
+            TYPE_DESCRIPTION + " TEXT " +
+             PRODUCT_ID + "INTEGER" + ")";
     private static final String CREATE_TABLE_SKINTYPES = "CREATE TABLE " +
             TABLE_SKINTYPES + "(" +
             SKINID + " INTEGER PRIMARY KEY, " +
@@ -123,9 +136,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             STORE_ZIP + " TEXT" + ")";
     private static final String CREATE_INVENTORY_TABLE = "CREATE TABLE " +
             TABLE_INVENTORY + "(" +
-            INV_ID + " INTEGER PRIMARY KEY," +
+            INV_ID + " INTEGER PRIMARY KEY, " +
             INV_DESCRIPTION + " TEXT " +
             INV_COUNT + " INTEGER" + ")";
+
+    private static final String CREATE_PRODUCT_TABLE = "CREATE TABLE " +
+            TABLE_PRODUCT + "(" +
+            PRODUCT_ID + " INTEGER PRIMARY KEY, " +
+            PRODUCT_DECRIPTION +" TEXT" + ")";
+
+    private static final String CREATE_BRAND_TABLE = "CREATE TABLE " +
+            TABLE_BRAND + "(" +
+            BRAND_ID + "INTEGER PRIMARY KEY, " +
+            BRAND_DESCRIPTION + " TEXT " +
+            PRODUCT_ID + " INTEGER" + ")";
 
     private static final String POPULATE_SKIN_TABLE = "INSERT INTO " +
             TABLE_SKINTYPES + " (" +
@@ -135,7 +159,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "(\"Mayo Juicy Burger\"), " +
             "(\"Mayo Holiday\"), " +
             "(\"Mayo Organic\"), " +
-            "(Lipton Hot Tea\"), " +
+            "(\"Lipton Hot Tea\"), " +
             "(\"Lipton Iced Tea\"), " +
             "(\"Knorr What's For Dinner\"), " +
             "(\"Dove 60th\"), " +
@@ -152,13 +176,32 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             "(\"Butter Bunker\"), " +
             "(\"Ice Cream Door\") , " +
             "(\"Redwood Cooler\")";
+    private static final String POPULATE_PRODUCT_TABLE = "INSERT INTO " +
+            TABLE_PRODUCT + " (" +
+            PRODUCT_DECRIPTION + ") VALUES " +
+            "(\"Mayo\"), " +
+            "(\"Knorr\"), " +
+            "(\"Tea\"), " +
+            "(\"Butter\"), " +
+            "(\"Ice Cream\"), " +
+            "(\"Personal Care\")";
 
+    private static final String POPULATE_BRAND_TABLE = "INSERT INTO " +
+            TABLE_BRAND + "(" +
+            BRAND_DESCRIPTION + "," + PRODUCT_ID + ") VALUES " +
+            "(\"Hellman's\",1), " +
+            "(\"Knorr\",2), " +
+            "(\"Lipton\",3), "+
+            "(\"Country Crock\",4), " +
+            "(\"Ben & Jerry's,5), " +
+            "(\"Dove\",6)";
 
-
+    private final Context fContext;
 
 
     public DatabaseHelper(Context context){
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
+        fContext = context;
     }
 
     @Override
@@ -172,6 +215,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(CREATE_TABLE_SKINTYPES);
         db.execSQL(POPULATE_SKIN_TABLE);
         db.execSQL(POPULATE_LEGOTYPE_TABLE);
+        db.execSQL(POPULATE_PRODUCT_TABLE);
+        db.execSQL(CREATE_BRAND_TABLE);
+        db.execSQL(POPULATE_BRAND_TABLE);
 
     }
 
@@ -182,7 +228,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISPLAYS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_LEGOTYPES);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_STORE);
-        db.execSQL("DROP TABLE IF EXISTS" + TABLE_INVENTORY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INVENTORY);
 
         //Create new tables
         onCreate(db);
@@ -204,6 +250,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    //TODO resetStore should be removed prior to release
+
     /**
      *
      * Reset store database
@@ -215,11 +263,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
        // db.execSQL("DROP TABLE IF EXISTS " + TABLE_STORE);
        // db.execSQL(CREATE_TABLE_STORE);
-        db.execSQL(CREATE_TABLE_SKINTYPES);
-        db.execSQL(POPULATE_SKIN_TABLE);
-        db.execSQL(POPULATE_LEGOTYPE_TABLE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISPLAYS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SKINTYPES);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PRODUCT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BRAND);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LEGOTYPES);
+        db.execSQL(CREATE_TABLE_LEGOTYPES);
+
+        db.execSQL(CREATE_TABLE_SKINTYPES);
+        //db.execSQL(POPULATE_SKIN_TABLE);
         db.execSQL(CREATE_TABLE_DISPLAYS);
+
+        db.execSQL(CREATE_PRODUCT_TABLE);
+        //db.execSQL(POPULATE_PRODUCT_TABLE);
+        db.execSQL(CREATE_BRAND_TABLE);
+        //db.execSQL(POPULATE_BRAND_TABLE);
+        addLegoTypes();
     }
 
     // ***********************Add to tables**************************
@@ -253,11 +312,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.close();
     }
 
-    public void addLegoTypes(LegoTypes legoTypes){
+    public void addLegoTypes(){
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(TYPE_DESCRIPTION, legoTypes.getTypeDescription());
+        Resources res = fContext.getResources();
+        String[] legoDescription = res.getStringArray(R.array.lego_description);
+        String[] legoProductId = res.getStringArray(R.array.lego_product_id);
+        int length = legoDescription.length;
+        for(int i = 0; i < length; i++){
+            values.put(TYPE_DESCRIPTION, legoDescription[i]);
+            values.put(PRODUCT_ID, legoProductId[i]);
+        }
 
         db.insert(TABLE_LEGOTYPES, null, values);
         db.close();

@@ -88,9 +88,10 @@
                 android:id="@+id/spinnerDisplay"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
                 app:layout_constraintLeft_toLeftOf="@+id/tvChain"
-                app:layout_constraintTop_toBottomOf="@+id/tvChain" />
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvProduct" />
 
             <TextView
                 android:id="@+id/tvDisplay"
@@ -105,16 +106,14 @@
                 android:id="@+id/spinnerSkin"
                 android:layout_width="150dp"
                 android:layout_height="wrap_content"
-                android:layout_marginRight="0dp"
-                android:layout_marginTop="16dp"
                 app:layout_constraintRight_toRightOf="@+id/spinnerStore"
-                app:layout_constraintTop_toBottomOf="@+id/etStore" />
+                tools:layout_editor_absoluteY="201dp"
+                android:layout_marginRight="0dp" />
 
             <TextView
                 android:id="@+id/tvSkin"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/skin"
                 app:layout_constraintLeft_toLeftOf="@+id/spinnerSkin"
@@ -126,9 +125,8 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="date"
-                android:layout_marginTop="11dp"
+                android:layout_marginTop="15dp"
                 app:layout_constraintTop_toBottomOf="@+id/tvDisplay"
-                android:layout_marginLeft="-13dp"
                 app:layout_constraintLeft_toLeftOf="@+id/tvDisplay" />
 
             <EditText
@@ -137,16 +135,14 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="number"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="15dp"
                 app:layout_constraintTop_toBottomOf="@+id/tvDatePlaced"
-                android:layout_marginLeft="0dp"
                 app:layout_constraintLeft_toLeftOf="@+id/tvDatePlaced" />
 
             <TextView
                 android:id="@+id/tvNumberPlaced"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/number_placed"
                 app:layout_constraintLeft_toLeftOf="@+id/etNumberPlaced"
@@ -156,7 +152,6 @@
                 android:id="@+id/tvDatePlaced"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/date_placed"
                 app:layout_constraintLeft_toLeftOf="@+id/etDatePlaced"
@@ -168,20 +163,37 @@
                 android:layout_height="wrap_content"
                 android:ems="10"
                 android:inputType="textMultiLine"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="15dp"
                 app:layout_constraintTop_toBottomOf="@+id/tvNumberPlaced"
-                android:layout_marginLeft="0dp"
                 app:layout_constraintLeft_toLeftOf="@+id/tvNumberPlaced" />
 
             <TextView
                 android:id="@+id/tvNotes"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginLeft="0dp"
                 android:layout_marginTop="8dp"
                 android:text="@string/notes"
                 app:layout_constraintLeft_toLeftOf="@+id/etNotes"
                 app:layout_constraintTop_toBottomOf="@+id/etNotes" />
+
+            <Spinner
+                android:id="@+id/spinnerProduct"
+                android:layout_width="150dp"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                app:layout_constraintTop_toBottomOf="@+id/tvChain"
+                android:layout_marginLeft="0dp"
+                app:layout_constraintLeft_toLeftOf="@+id/tvChain" />
+
+            <TextView
+                android:id="@+id/tvProduct"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginLeft="0dp"
+                android:layout_marginTop="8dp"
+                android:text="Product Type"
+                app:layout_constraintLeft_toLeftOf="@+id/spinnerProduct"
+                app:layout_constraintTop_toBottomOf="@+id/spinnerProduct" />
 
         </android.support.constraint.ConstraintLayout>
 

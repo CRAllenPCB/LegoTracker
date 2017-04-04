@@ -1,4 +1,5 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -11,5 +12,15 @@
         android:text="Display Details"
         android:textSize="40dp"
         android:layout_centerInParent="true"/>
+
+    <android.support.design.widget.FloatingActionButton
+        android:id="@+id/fab_display_details"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="bottom|right"
+        android:clickable="true"
+        android:tint="@color/white"
+        android:layout_margin="@dimen/fab_margin"
+        app:srcCompat="@drawable/ic_add_circle_outline_black_24dp" />
 
 </FrameLayout>

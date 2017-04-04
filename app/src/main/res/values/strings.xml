@@ -58,4 +58,25 @@
     <string name="stores_layout_city">City</string>
     <string name="stores_layout_state">State</string>
     <string name="stores_layout_zip">Zip Code</string>
+
+    <!-- Database Strings -->
+    <!-- Lego database strings -->
+    <string-array name="lego_description">
+        <item>Duplo</item>
+        <item>Lego</item>
+        <item>Mayo Basket</item>
+        <item>ICBINB Basket</item>
+        <item>Butter Bunker</item>
+        <item>Ice Cream Door</item>
+        <item>Redwood Cooler</item>
+    </string-array>
+    <string-array name="lego_product_id">
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>4</item>
+        <item>4</item>
+        <item>5</item>
+        <item>4</item>
+    </string-array>
 </resources>
