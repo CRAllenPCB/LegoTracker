@@ -6,7 +6,7 @@ package com.apexcomputerservice.legotracker.model;
 
 public class Skin {
 
-    int skinid;
+    int skinid, brandid, productid;
     String skinDescription;
 
     //Empty constructor
@@ -15,9 +15,11 @@ public class Skin {
     }
 
     //Constructor
-    public Skin(int skinid, String skinDescription){
+    public Skin(int skinid, String skinDescription, int brandid, int productid){
         this.skinid = skinid;
         this.skinDescription = skinDescription;
+        this.brandid = brandid;
+        this.productid = productid;
     }
 
     public int getSkinid() {
@@ -34,5 +36,10 @@ public class Skin {
 
     public void setSkinDescription(String skinDescription) {
         this.skinDescription = skinDescription;
+    }
+    //Override toString() so chainName will show in Spinner
+    @Override
+    public String toString(){
+        return this.skinDescription;
     }
 }

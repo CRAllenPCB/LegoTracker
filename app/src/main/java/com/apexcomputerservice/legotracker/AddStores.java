@@ -62,6 +62,7 @@ public class AddStores extends AppCompatActivity {
             public void onClick(View view){
                 //Enter method to process EditText input
                 addStoreToDatabase();
+                finish();
             }
         });
 
@@ -72,6 +73,7 @@ public class AddStores extends AppCompatActivity {
                 //Grab id
                 Chain chainSelected = (Chain)parent.getItemAtPosition(pos);
                 chainId = chainSelected.getChainid();
+                chainName = chainSelected.getChainName();
                 Log.v(TAG, "Chain ID Selected = " + Integer.toString(chainId));
             }
             @Override
@@ -151,7 +153,7 @@ public class AddStores extends AppCompatActivity {
             helper.addStore(newStore);
             helper.closeDB();
 
-            Toast.makeText(getApplicationContext(),"Store "+ chainName + " " + storeNumToAdd + "added", Toast.LENGTH_SHORT).show();
+            Toast.makeText(getApplicationContext(),"Store "+ chainName + " " + storeNumToAdd + " added", Toast.LENGTH_SHORT).show();
 
         }
     }

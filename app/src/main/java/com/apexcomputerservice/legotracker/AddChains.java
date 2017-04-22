@@ -59,6 +59,7 @@ public class AddChains extends AppCompatActivity {
             public void onClick(View view){
                 //Enter method to process EditText input
                 addChainToDatabase();
+                finish();
             }
         });
 

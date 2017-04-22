@@ -7,7 +7,7 @@ package com.apexcomputerservice.legotracker.model;
 public class LegoTypes {
 
     //private variables
-    int typeid;
+    int typeid,productid;
     String typeDescription;
 
     //empty constructor
@@ -16,9 +16,10 @@ public class LegoTypes {
     }
 
     //constructor
-    public LegoTypes(int typeid, String typeDescription){
+    public LegoTypes(int typeid, String typeDescription, int productid){
         this.typeid = typeid;
         this.typeDescription = typeDescription;
+        this.productid = productid;
     }
 
     public int getTypeid() {
@@ -35,5 +36,11 @@ public class LegoTypes {
 
     public void setTypeDescription(String typeDescription) {
         this.typeDescription = typeDescription;
+    }
+
+    //Override toString() so chainName will show in Spinner
+    @Override
+    public String toString(){
+        return this.typeDescription;
     }
 }

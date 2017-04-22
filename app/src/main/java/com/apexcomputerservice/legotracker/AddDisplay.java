@@ -13,18 +13,21 @@ import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Spinner;
 
+import com.apexcomputerservice.legotracker.model.Brands;
 import com.apexcomputerservice.legotracker.model.Chain;
 import com.apexcomputerservice.legotracker.model.LegoTypes;
+import com.apexcomputerservice.legotracker.model.Product;
 import com.apexcomputerservice.legotracker.model.Skin;
 import com.apexcomputerservice.legotracker.model.Store;
+import com.facebook.stetho.inspector.protocol.module.Database;
 
 import java.util.List;
 
 public class AddDisplay extends AppCompatActivity {
 
     EditText datePlaced, numberPlaced ,notes;
-    int chainId , storeId, legoId, skinId;
-    Spinner spinnerChain, spinnerStore, spinnerDisplay, spinnerSkin;
+    int chainId , storeId, legoId, skinId, productID, brandId;
+    Spinner spinnerChain, spinnerStore, spinnerDisplay, spinnerSkin, spinnerProduct, spinnerBrand;
     DatabaseHelper helper;
     Display newDisplay;
     String TAG="SQLInputCheck";
@@ -66,6 +69,8 @@ public class AddDisplay extends AppCompatActivity {
         spinnerDisplay = (Spinner) findViewById(R.id.spinnerDisplay);
         spinnerSkin = (Spinner) findViewById(R.id.spinnerSkin);
         spinnerChain = (Spinner) findViewById(R.id.spinnerChain);
+        spinnerProduct = (Spinner) findViewById(R.id.spinnerProduct);
+        spinnerBrand = (Spinner) findViewById(R.id.spinnerBrand);
 
         //Set Listeners
         spinnerChain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
@@ -75,7 +80,7 @@ public class AddDisplay extends AppCompatActivity {
                 Chain chainSelected = (Chain)parent.getItemAtPosition(pos);
                 chainId = chainSelected.getChainid();
                 Log.v(TAG, "Chain ID Selected = " + Integer.toString(chainId));
-                //TODO Load Store spinner based on chain id
+
                 loadStoreSpinnerData(chainId);
             }
             @Override
@@ -99,12 +104,45 @@ public class AddDisplay extends AppCompatActivity {
             }
         });
 
+        spinnerProduct.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
+                Product productSelected = (Product)parent.getItemAtPosition(pos);
+                productID = productSelected.getProductid();
+                loadDisplaySpinnerData(productID);
+                loadBrandSpinner(productID);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView){
+
+            }
+        });
+
+
+
+        loadProductSpinnerData();
+
+        spinnerBrand.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
+                Brands brandSelected = (Brands)parent.getItemAtPosition(pos);
+                brandId = brandSelected.getBrandid();
+
+                loadSkinSpinnerData(legoId, productID, brandId);
+            }
+            @Override
+            public void onNothingSelected(AdapterView<?> adapterView){
+
+            }
+        });
+
         spinnerDisplay.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
                 LegoTypes displaySelected = (LegoTypes)parent.getItemAtPosition(pos);
                 legoId = displaySelected.getTypeid();
-                Log.v(TAG, "Display ID Selected = " + Integer.toString(legoId));
+
+                loadSkinSpinnerData(legoId, productID, brandId);
             }
             @Override
                     public void onNothingSelected(AdapterView<?> adapterView){
@@ -112,7 +150,7 @@ public class AddDisplay extends AppCompatActivity {
             }
         });
 
-        loadDisplaySpinnerData();
+       loadDisplaySpinnerData(productID);
 
         spinnerSkin.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
@@ -127,7 +165,7 @@ public class AddDisplay extends AppCompatActivity {
             }
         });
 
-        loadSkinSpinnerData();
+
 
     }
 
@@ -149,27 +187,49 @@ public class AddDisplay extends AppCompatActivity {
         DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
         List<Store> stores = helper.getChainStores(chainid);
 
+
         ArrayAdapter<Store> dataAdapter = new ArrayAdapter<Store>(this, android.R.layout.simple_spinner_item, stores);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerStore.setAdapter(dataAdapter);
     }
 
-    private void loadDisplaySpinnerData(){
+    //TODO Adjust display and skin loaders to use ProductID & BrandID
+    private void loadDisplaySpinnerData(int productID){
         DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
-        List<LegoTypes> legos = helper.getLegoTypes();
+        List<LegoTypes> legos = helper.getLegoTypes(productID);
 
         ArrayAdapter<LegoTypes> dataAdapter = new ArrayAdapter<LegoTypes>(this, android.R.layout.simple_spinner_item, legos);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerDisplay.setAdapter(dataAdapter);
     }
 
-    private void loadSkinSpinnerData(){
+    private void loadSkinSpinnerData(int legoId, int productID, int brandId){
         DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
-        List<Skin> skins = helper.getSkins();
+        Log.v(TAG, "Skin Loading ... Product ID = " + productID + " ... Brand Id = " + brandId);
+        List<Skin> skins = helper.getSkins(legoId, productID, brandId);
 
         ArrayAdapter<Skin> dataAdapter = new ArrayAdapter<Skin>(this, android.R.layout.simple_spinner_item,skins);
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         spinnerSkin.setAdapter(dataAdapter);
+    }
+
+    //TODO TEST listners to Product and Brand spinners & create database helper methods
+    private void loadProductSpinnerData(){
+        DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
+        List<Product> product = helper.getProducts();
+
+        ArrayAdapter<Product> dataAdapter = new ArrayAdapter<Product>(this,android.R.layout.simple_spinner_item,product);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerProduct.setAdapter(dataAdapter);
+    }
+
+    private void loadBrandSpinner(int productID){
+        DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
+        List<Brands> brand = helper.getBrands(productID);
+
+        ArrayAdapter<Brands> dataAdapter = new ArrayAdapter<Brands>(this,android.R.layout.simple_spinner_item,brand);
+        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerBrand.setAdapter(dataAdapter);
     }
 
     private void addDisplayToDatabase(){

@@ -39,6 +39,7 @@
     <string name="date_placed">Date Placed</string>
     <string name="number_placed">Number Placed</string>
     <string name="notes">Notes</string>
+    <string name="brand">Brand</string>
 
     <!-- Empty table strings -->
     <string name="empty_chains">No chains found</string>
@@ -78,5 +79,101 @@
         <item>4</item>
         <item>5</item>
         <item>4</item>
+    </string-array>
+
+    <!-- Skins database strings -->
+    <string-array name="skin_description">
+        <item>None</item>
+        <item>Mayo Onion Dip</item>
+        <item>Mayo Juicy Burger</item>
+        <item>Mayo Holiday</item>
+        <item>Mayo Organic</item>
+        <item>Lipton Hot Tea</item>
+        <item>Lipton Iced Tea</item>
+        <item>Knorr WFD?</item>
+        <item>Dove 60th</item>
+        <item>Men\'s NCAA</item>
+        <item>Taking Care of U</item>
+    </string-array>
+    <string-array name="skin_product_id">
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>3</item>
+        <item>3</item>
+        <item>2</item>
+        <item>6</item>
+        <item>6</item>
+        <item>6</item>
+    </string-array>
+    <!--TODO Change Dove 60th to id to 13 -->
+    <string-array name="skin_brand_id">
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>3</item>
+        <item>3</item>
+        <item>2</item>
+        <item>13</item>
+        <item>99</item>
+        <item>99</item>
+    </string-array>
+
+    <!-- Product database strings -->
+    <string-array name="product_description">
+        <item>Mayo</item>
+        <item>Sides</item>
+        <item>Tea</item>
+        <item>Butter</item>
+        <item>Ice Cream</item>
+        <item>Personal Care</item>
+    </string-array>
+
+    <!-- Brands database strings -->
+    <string-array name="brand_description">
+        <item>Hellman\'s</item>
+        <item>Knorr</item>
+        <item>Lipton</item>
+        <item>Pure Leaf</item>
+        <item>Country Crock</item>
+        <item>ICBINB</item>
+        <item>Imperial</item>
+        <item>Brummel &amp; Brown</item>
+        <item>Ben &amp; Jerry\'s</item>
+        <item>Breyer\'s</item>
+        <item>Popsicle</item>
+        <item>Other Ice Cream</item>
+        <item>Dove</item>
+        <item>Axe</item>
+        <item>Suave</item>
+        <item>Tresemme</item>
+        <item>Q-Tips</item>
+        <item>Vaseline</item>
+        <item>Other Personal Care</item>
+    </string-array>
+    <string-array name="brand_product_id">
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>3</item>
+        <item>4</item>
+        <item>4</item>
+        <item>4</item>
+        <item>4</item>
+        <item>5</item>
+        <item>5</item>
+        <item>5</item>
+        <item>5</item>
+        <item>6</item>
+        <item>6</item>
+        <item>6</item>
+        <item>6</item>
+        <item>6</item>
+        <item>6</item>
+        <item>6</item>
     </string-array>
 </resources>

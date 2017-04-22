@@ -70,6 +70,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
 
         tabLayout = (TabLayout) findViewById(R.id.tabs);
         tabLayout.setupWithViewPager(viewPager);
+        //TODO Remove below prior to release
         /*
         Used to delete and rebuild store table during testing - to be removed
          */
@@ -157,7 +158,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         }
     }
 
-
+    //TODO Add Firebase crash reporting & anayltics
 
 }
 

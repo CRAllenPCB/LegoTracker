@@ -83,9 +83,9 @@ public class ShowChains extends AppCompatActivity {
         //Check that table is populate
 
         helper = new DatabaseHelper(this);
-        helper.openReadableDB();
+       // helper.openReadableDB();
         emptyTable = helper.isTableEmpty(TABLE_NAME);
-        helper.closeDB();
+        //helper.closeDB();
         if (emptyTable) {
             emptyTextView = (TextView) findViewById(R.id.emptyTextView);
             emptyTextView.setVisibility(View.VISIBLE);
@@ -94,9 +94,9 @@ public class ShowChains extends AppCompatActivity {
             emptyTextView.setVisibility(View.GONE);
             helper = new DatabaseHelper(this);
             chainList = new ArrayList<Chain>();
-            helper.openReadableDB();
+           // helper.openReadableDB();
             chainList = helper.getChains();
-            helper.closeDB();
+           // helper.closeDB();
 
             mRecyclerView = (RecyclerView) findViewById(R.id.rv);
             mRecyclerView.setHasFixedSize(true);

@@ -91,4 +91,10 @@ public class Store {
     public void setStoreZip(String storeZip) {
         this.storeZip = storeZip;
     }
+
+    //Override toString() so chainName will show in Spinner
+    @Override
+    public String toString(){
+        return this.storeNumber;
+    }
 }
