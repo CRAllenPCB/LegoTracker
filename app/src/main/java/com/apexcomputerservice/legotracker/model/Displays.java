@@ -25,6 +25,8 @@ public class Displays {
     int skinid;
     int chainid;
     String notes;
+    long removalDate;
+    int weeksUp;
 
     //empty constructor
     public Displays(){
@@ -32,7 +34,7 @@ public class Displays {
     }
 
     //constructor
-    public Displays(int placementId, long placementDate, int placementUp, int storeid, int typeid, int initalQty, int currentQty, int resold, int skinid, int chainid, String notes){
+    public Displays(int placementId, long placementDate, int placementUp, int storeid, int typeid, int initalQty, int currentQty, int resold, int skinid, int chainid, String notes, long removalDate, int weeksUp){
         this.placementId = placementId;
         this.placementDate = placementDate;
         this.placementUp = placementUp;
@@ -44,6 +46,8 @@ public class Displays {
         this.skinid = skinid;
         this.chainid = chainid;
         this.notes = notes;
+        this.removalDate = removalDate;
+        this.weeksUp = weeksUp;
     }
 
     public int getPlacementId() {
@@ -132,5 +136,21 @@ public class Displays {
 
     public void setNotes(String notes) {
         this.notes = notes;
+    }
+
+    public long getRemovalDate() {
+        return removalDate;
+    }
+
+    public void setRemovalDate(long removalDate) {
+        this.removalDate = removalDate;
+    }
+
+    public int getWeeksUp() {
+        return weeksUp;
+    }
+
+    public void setWeeksUp(int weeksUp) {
+        this.weeksUp = weeksUp;
     }
 }

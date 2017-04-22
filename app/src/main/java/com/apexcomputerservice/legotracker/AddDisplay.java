@@ -1,5 +1,7 @@
 package com.apexcomputerservice.legotracker;
 
+import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
@@ -10,26 +12,40 @@ import android.view.Display;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
+import android.widget.Toast;
 
 import com.apexcomputerservice.legotracker.model.Brands;
 import com.apexcomputerservice.legotracker.model.Chain;
+import com.apexcomputerservice.legotracker.model.Displays;
 import com.apexcomputerservice.legotracker.model.LegoTypes;
 import com.apexcomputerservice.legotracker.model.Product;
 import com.apexcomputerservice.legotracker.model.Skin;
 import com.apexcomputerservice.legotracker.model.Store;
 import com.facebook.stetho.inspector.protocol.module.Database;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+import java.util.Locale;
+
+import static java.util.Calendar.DAY_OF_MONTH;
+import static java.util.Calendar.MONTH;
+import static java.util.Calendar.YEAR;
 
 public class AddDisplay extends AppCompatActivity {
 
     EditText datePlaced, numberPlaced ,notes;
-    int chainId , storeId, legoId, skinId, productID, brandId;
+    int chainId , storeId, legoId, skinId, productID, brandId, initalQty;
+    long datePlacedUnix;
+    String notesText;
     Spinner spinnerChain, spinnerStore, spinnerDisplay, spinnerSkin, spinnerProduct, spinnerBrand;
     DatabaseHelper helper;
-    Display newDisplay;
+    Displays newDisplays;
+    Calendar c;
+    SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
     String TAG="SQLInputCheck";
 
     @Override
@@ -71,6 +87,34 @@ public class AddDisplay extends AppCompatActivity {
         spinnerChain = (Spinner) findViewById(R.id.spinnerChain);
         spinnerProduct = (Spinner) findViewById(R.id.spinnerProduct);
         spinnerBrand = (Spinner) findViewById(R.id.spinnerBrand);
+
+
+        //Handle Date
+        c = Calendar.getInstance();
+
+        final DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int day) {
+                c.set(YEAR, year);
+                c.set(MONTH, month);
+                c.set(DAY_OF_MONTH, day);
+
+                //TODO Get rid of keyboard on this EditText
+                datePlaced.setText(sdf.format(c.getTime()));
+                datePlacedUnix = c.getTimeInMillis()/1000;
+
+
+            }
+        };
+
+        datePlaced.setOnClickListener(new View.OnClickListener(){
+            @Override
+            public void onClick(View v){
+                new DatePickerDialog(AddDisplay.this,dateListener,c.get(Calendar.YEAR), c.get(Calendar.MONTH), c.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+
+
 
         //Set Listeners
         spinnerChain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
@@ -234,5 +278,35 @@ public class AddDisplay extends AppCompatActivity {
 
     private void addDisplayToDatabase(){
         //TODO add display to database
+        if (datePlaced == null ){
+            Toast.makeText(getApplicationContext(), "Date cannot be empty", Toast.LENGTH_SHORT).show();
+        } else {
+            if (numberPlaced == null) {
+                Toast.makeText(getApplicationContext(), "Number Placed cannot be empty", Toast.LENGTH_SHORT).show();
+            } else {
+                initalQty = Integer.parseInt(numberPlaced.getText().toString());
+                notesText = notes.getText().toString();
+                //Add to database
+                helper = new DatabaseHelper(this);
+                helper.openWriteableDB();
+
+                newDisplays = new Displays();
+                newDisplays.setPlacementDate(datePlacedUnix);
+                newDisplays.setPlacementUp(1);
+                newDisplays.setChainid(chainId);
+                newDisplays.setStoreid(storeId);
+                newDisplays.setTypeid(legoId);
+                newDisplays.setInitalQty(initalQty);
+                newDisplays.setCurrentQty(initalQty);
+                newDisplays.setResold(0);
+                newDisplays.setSkinid(skinId);
+                newDisplays.setNotes(notesText);
+
+                helper.addDisplay(newDisplays);
+                Toast.makeText(getApplicationContext(), "New Display Added", Toast.LENGTH_SHORT).show();
+
+                finish();
+            }
+        }
     }
 }

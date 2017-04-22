@@ -60,6 +60,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CUR_QTY = "currentQty";
     private static final String RESOLD = "resold";
     private static final String NOTES = "notes";
+    private static final String REMOVAL_DATE = "removalDate";
+    private static final String WEEKS_UP = "weeksUp";
 
     //LegoTypes Table Names
     private static final String TABLE_LEGOTYPES = "legotypes";
@@ -107,16 +109,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String CREATE_TABLE_DISPLAYS = "CREATE TABLE " +
             TABLE_DISPLAYS + "(" +
             PLACEMENTID + " INTEGER PRIMARY KEY, " +
-            PLACEMENT_DATE + " TEXT, " +
+            PLACEMENT_DATE + " INTEGER, " +
             UP + " INTEGER, " +
             CHAINID + " INTEGER, " +
             STOREID + " INTEGER, " +
             TYPE + " INTERGER, " +
             INT_QTY + " INTEGER, " +
-            CUR_QTY + " INTEGER " +
-            RESOLD + " INTEGER " +
-            SKINID + " INTEGER" +
-            NOTES + " TEXT" + ")";
+            CUR_QTY + " INTEGER, " +
+            RESOLD + " INTEGER, " +
+            SKINID + " INTEGER, " +
+            NOTES + " TEXT, " +
+            REMOVAL_DATE + " INTEGER, " +
+            WEEKS_UP + " INTEGER" + ")";
     private static final String CREATE_TABLE_LEGOTYPES = "CREATE TABLE " +
             TABLE_LEGOTYPES + "(" +
             TYPEID + " INTEGER PRIMARY KEY, "+
@@ -222,9 +226,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void resetStore(){
         SQLiteDatabase db = this.getWritableDatabase();
 
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SKINTYPES);
-        db.execSQL(CREATE_TABLE_SKINTYPES);
-        populateSkin(db);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISPLAYS);
+        db.execSQL(CREATE_TABLE_DISPLAYS);
+
 
 
     }
@@ -244,16 +248,21 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     public void addDisplay(Displays displays){
-        //Add new dipsplay
+        //Add new display
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values= new ContentValues();
         values.put(PLACEMENT_DATE, String.valueOf(displays.getPlacementDate()));
         values.put(UP, displays.getPlacementUp());
+        values.put(CHAINID, displays.getChainid());
+        values.put(STOREID, displays.getStoreid());
         values.put(TYPE , displays.getTypeid());
         values.put(INT_QTY, displays.getInitalQty());
         values.put(CUR_QTY , displays.getCurrentQty());
         values.put(RESOLD, displays.getResold());
+        values.put(SKINID, displays.getSkinid());
+        values.put(NOTES, displays.getNotes());
+
 
         //Insert rows
         db.insert(TABLE_DISPLAYS, null, values);
