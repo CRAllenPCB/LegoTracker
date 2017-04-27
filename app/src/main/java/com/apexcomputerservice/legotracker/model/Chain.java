@@ -12,7 +12,6 @@ public class Chain {
     //private variables
     int chainid;
     String chainName;
-    String TAG = "SQLInputCheck";
 
     //Empty constructor
     public Chain() {
@@ -38,7 +37,6 @@ public class Chain {
 
     public void setChainName(String chainName) {
         this.chainName = chainName;
-            Log.v(TAG, "Chain obj name is " + getChainName() );
     }
 
     //Override toString() so chainName will show in Spinner

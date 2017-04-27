@@ -32,7 +32,6 @@ public class AddChains extends AppCompatActivity {
     EditText addChains;
     DatabaseHelper helper;
     Chain newChain;
-    String TAG="SQLInputCheck";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -73,9 +72,7 @@ public class AddChains extends AppCompatActivity {
     }
 
     public void addChainToDatabase(){  //Trigger this method on SAVE click
-            Log.v(TAG, "addChains = " + addChains.getText().toString());
         String chainToAdd = addChains.getText().toString();
-            Log.v(TAG,"chainToAdd = " + chainToAdd);
         boolean isEmpty = chainToAdd == null || chainToAdd.trim().length() == 0;
         if (isEmpty){
             // Make Toast to display error msg
@@ -88,7 +85,6 @@ public class AddChains extends AppCompatActivity {
             newChain = new Chain();
             newChain.setChainName(chainToAdd);
                 String newTest = newChain.getChainName();
-                Log.v(TAG,"newTest = " + newTest);
             helper.addChain(newChain);
             Toast.makeText(getApplicationContext(),"Chain " + chainToAdd +" added", Toast.LENGTH_SHORT).show();
         }

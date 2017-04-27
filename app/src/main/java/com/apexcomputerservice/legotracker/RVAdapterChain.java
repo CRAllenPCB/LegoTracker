@@ -71,8 +71,6 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
     private List<Chain> chains;
     private Context context;
 
-    public String TAG="SQLInputCheck";
-
 
     public RVAdapterChain(Context context,List<Chain> chains){
         this.chains=chains;

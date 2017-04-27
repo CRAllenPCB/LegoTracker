@@ -77,8 +77,6 @@ public class RVAdapterStore extends RecyclerView.Adapter<RVAdapterStore.StoreVie
     private List<Store> stores;
     private Context context;
 
-    public String TAG="SQLInputCheck";
-
 
     public RVAdapterStore(Context context,List<Store> stores){
         this.stores=stores;

@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v7.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:card_view="http://schemas.android.com/tools"
+    card_view:cardCornerRadius="8dp"
+    card_view:cardElevation="8dp"
+    app:cardUseCompatPadding="true"
+    android:id="@+id/cv_display">
+
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/tvStore"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginRight="16dp"
+            android:layout_marginTop="8dp"
+            android:text="WalMart 818"
+            android:textStyle="bold"
+            app:layout_constraintRight_toRightOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvLocation"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Panama City Beach, FL"
+            android:layout_marginRight="0dp"
+            app:layout_constraintRight_toRightOf="@+id/tvStore"
+            android:layout_marginTop="8dp"
+            app:layout_constraintTop_toBottomOf="@+id/tvStore" />
+
+        <TextView
+            android:id="@+id/tvDisplayType"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="16dp"
+            android:layout_marginTop="8dp"
+            android:text="Hellman's Lego (2)"
+            android:textStyle="bold"
+            app:layout_constraintLeft_toLeftOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tvWeeksUp"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="8dp"
+            android:text="Up 2.4 weeks"
+            app:layout_constraintLeft_toLeftOf="@+id/tvDisplayType"
+            app:layout_constraintTop_toBottomOf="@+id/tvDisplayType" />
+
+        <TextView
+            android:id="@+id/tvResold"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="0dp"
+            android:layout_marginTop="8dp"
+            android:text="Resold Never"
+            app:layout_constraintLeft_toLeftOf="@+id/tvWeeksUp"
+            app:layout_constraintTop_toBottomOf="@+id/tvWeeksUp" />
+
+    </android.support.constraint.ConstraintLayout>
+
+</android.support.v7.widget.CardView>

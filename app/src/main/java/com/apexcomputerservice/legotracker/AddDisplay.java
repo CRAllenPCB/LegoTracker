@@ -1,5 +1,6 @@
 package com.apexcomputerservice.legotracker;
 
+import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.content.Intent;
 import android.support.design.widget.FloatingActionButton;
@@ -7,6 +8,7 @@ import android.support.v7.app.ActionBar;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.text.InputType;
 import android.util.Log;
 import android.view.Display;
 import android.view.View;
@@ -31,6 +33,7 @@ import java.util.Calendar;
 import java.util.List;
 import java.util.Locale;
 
+import static android.text.InputType.TYPE_NULL;
 import static java.util.Calendar.DAY_OF_MONTH;
 import static java.util.Calendar.MONTH;
 import static java.util.Calendar.YEAR;
@@ -46,7 +49,6 @@ public class AddDisplay extends AppCompatActivity {
     Displays newDisplays;
     Calendar c;
     SimpleDateFormat sdf = new SimpleDateFormat("MMMM d, yyyy", Locale.US);
-    String TAG="SQLInputCheck";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -76,8 +78,6 @@ public class AddDisplay extends AppCompatActivity {
             }
         });
 
-
-
         datePlaced = (EditText) findViewById(R.id.etDatePlaced);
         notes = (EditText) findViewById(R.id.etNotes);
         numberPlaced = (EditText) findViewById(R.id.etNumberPlaced);
@@ -88,9 +88,10 @@ public class AddDisplay extends AppCompatActivity {
         spinnerProduct = (Spinner) findViewById(R.id.spinnerProduct);
         spinnerBrand = (Spinner) findViewById(R.id.spinnerBrand);
 
-
         //Handle Date
         c = Calendar.getInstance();
+        //Get rid of keyboard
+        datePlaced.setInputType(InputType.TYPE_NULL);
 
         final DatePickerDialog.OnDateSetListener dateListener = new DatePickerDialog.OnDateSetListener() {
             @Override
@@ -99,11 +100,8 @@ public class AddDisplay extends AppCompatActivity {
                 c.set(MONTH, month);
                 c.set(DAY_OF_MONTH, day);
 
-                //TODO Get rid of keyboard on this EditText
                 datePlaced.setText(sdf.format(c.getTime()));
                 datePlacedUnix = c.getTimeInMillis()/1000;
-
-
             }
         };
 
@@ -114,8 +112,6 @@ public class AddDisplay extends AppCompatActivity {
             }
         });
 
-
-
         //Set Listeners
         spinnerChain.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener(){
             @Override
@@ -123,13 +119,11 @@ public class AddDisplay extends AppCompatActivity {
                 //Grab id
                 Chain chainSelected = (Chain)parent.getItemAtPosition(pos);
                 chainId = chainSelected.getChainid();
-                Log.v(TAG, "Chain ID Selected = " + Integer.toString(chainId));
 
                 loadStoreSpinnerData(chainId);
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView){
-
             }
         });
 
@@ -140,11 +134,9 @@ public class AddDisplay extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
                 Store storeSelected = (Store)parent.getItemAtPosition(pos);
                 storeId = storeSelected.getStoreid();
-                Log.v(TAG, "Store ID Selected = " + Integer.toString(storeId));
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView){
-
             }
         });
 
@@ -158,7 +150,6 @@ public class AddDisplay extends AppCompatActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView){
-
             }
         });
 
@@ -176,7 +167,6 @@ public class AddDisplay extends AppCompatActivity {
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView){
-
             }
         });
 
@@ -190,7 +180,6 @@ public class AddDisplay extends AppCompatActivity {
             }
             @Override
                     public void onNothingSelected(AdapterView<?> adapterView){
-
             }
         });
 
@@ -201,16 +190,11 @@ public class AddDisplay extends AppCompatActivity {
             public void onItemSelected(AdapterView<?> parent, View view, int pos, long id){
                 Skin skinSelected = (Skin)parent.getItemAtPosition(pos);
                 skinId = skinSelected.getSkinid();
-                Log.v(TAG, "Skin ID Selected = " + Integer.toString(skinId));
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView){
-
             }
         });
-
-
-
     }
 
 
@@ -224,7 +208,6 @@ public class AddDisplay extends AppCompatActivity {
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         //Attach dat adapter to spinner
         spinnerChain.setAdapter(dataAdapter);
-
     }
 
     private void loadStoreSpinnerData(int chainid){
@@ -237,7 +220,6 @@ public class AddDisplay extends AppCompatActivity {
         spinnerStore.setAdapter(dataAdapter);
     }
 
-    //TODO Adjust display and skin loaders to use ProductID & BrandID
     private void loadDisplaySpinnerData(int productID){
         DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
         List<LegoTypes> legos = helper.getLegoTypes(productID);
@@ -249,7 +231,6 @@ public class AddDisplay extends AppCompatActivity {
 
     private void loadSkinSpinnerData(int legoId, int productID, int brandId){
         DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
-        Log.v(TAG, "Skin Loading ... Product ID = " + productID + " ... Brand Id = " + brandId);
         List<Skin> skins = helper.getSkins(legoId, productID, brandId);
 
         ArrayAdapter<Skin> dataAdapter = new ArrayAdapter<Skin>(this, android.R.layout.simple_spinner_item,skins);
@@ -257,7 +238,7 @@ public class AddDisplay extends AppCompatActivity {
         spinnerSkin.setAdapter(dataAdapter);
     }
 
-    //TODO TEST listners to Product and Brand spinners & create database helper methods
+
     private void loadProductSpinnerData(){
         DatabaseHelper helper = new DatabaseHelper(getApplicationContext());
         List<Product> product = helper.getProducts();
@@ -277,7 +258,7 @@ public class AddDisplay extends AppCompatActivity {
     }
 
     private void addDisplayToDatabase(){
-        //TODO add display to database
+
         if (datePlaced == null ){
             Toast.makeText(getApplicationContext(), "Date cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
@@ -301,10 +282,15 @@ public class AddDisplay extends AppCompatActivity {
                 newDisplays.setResold(0);
                 newDisplays.setSkinid(skinId);
                 newDisplays.setNotes(notesText);
+                newDisplays.setProductId(productID);
+                newDisplays.setBrandId(brandId);
+
 
                 helper.addDisplay(newDisplays);
+                helper.close();
                 Toast.makeText(getApplicationContext(), "New Display Added", Toast.LENGTH_SHORT).show();
 
+                setResult(Activity.RESULT_OK);
                 finish();
             }
         }

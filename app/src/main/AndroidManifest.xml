@@ -8,13 +8,17 @@
         android:label="@string/app_name"
         android:supportsRtl="true"
         android:theme="@style/AppTheme.NoActionBar">
-        <activity android:name=".MainActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+        <activity
+            android:name=".MainActivity"
+            android:configChanges="orientation|keyboard|keyboardHidden"
+            android:screenOrientation="sensor">
+                <intent-filter>
+                    <action android:name="android.intent.action.MAIN" />
+                    <category android:name="android.intent.category.LAUNCHER" />
+                    </intent-filter>
         </activity>
+
         <activity
             android:name=".ShowChains"
             android:label="@string/label_chains"
@@ -25,6 +29,7 @@
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.apexcomputerservice.legotracker.MainActivity" />
         </activity>
+
         <activity
             android:name=".AddChains"
             android:windowSoftInputMode="adjustResize" />

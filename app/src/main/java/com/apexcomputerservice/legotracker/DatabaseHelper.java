@@ -34,7 +34,7 @@ import static java.sql.Types.NULL;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
-    String TAG = "SQLInputCheck";
+
 
     //All Static variables
     //Database Version
@@ -113,14 +113,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             UP + " INTEGER, " +
             CHAINID + " INTEGER, " +
             STOREID + " INTEGER, " +
-            TYPE + " INTERGER, " +
+            TYPE + " INTEGER, " +
             INT_QTY + " INTEGER, " +
             CUR_QTY + " INTEGER, " +
             RESOLD + " INTEGER, " +
             SKINID + " INTEGER, " +
             NOTES + " TEXT, " +
             REMOVAL_DATE + " INTEGER, " +
-            WEEKS_UP + " INTEGER" + ")";
+            PRODUCT_ID + " INTEGER, " +
+            BRAND_ID + " INTEGER, " +
+            WEEKS_UP + " INTEGER " + ")";
     private static final String CREATE_TABLE_LEGOTYPES = "CREATE TABLE " +
             TABLE_LEGOTYPES + "(" +
             TYPEID + " INTEGER PRIMARY KEY, "+
@@ -262,6 +264,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(RESOLD, displays.getResold());
         values.put(SKINID, displays.getSkinid());
         values.put(NOTES, displays.getNotes());
+        values.put(PRODUCT_ID, displays.getProductId());
+        values.put(BRAND_ID, displays.getBrandId());
 
 
         //Insert rows
@@ -280,7 +284,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         for(int i = 0; i < length; i++){
             values.put(TYPE_DESCRIPTION, legoDescription[i]);
             values.put(PRODUCT_ID, legoProductId[i]);
-            Log.v(TAG, "Description is " + legoDescription[i]);
             db.insert(TABLE_LEGOTYPES, null, values);
         }
 
@@ -375,9 +378,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Get single display
         SQLiteDatabase db = this.getReadableDatabase();
 
-        String selectQuery = "SELECT * FROM " + TABLE_DISPLAYS + " WHERE " + PLACEMENTID + " = " + placementid;
+        String selectQuery = "SELECT *" +
+          //          TABLE_CHAIN + "." + CHAIN_NAME + " AS chain_name" +
+          //          TABLE_STORE + "." + STORE_NUM + " AS store_number" +
+          //          TABLE_LEGOTYPES + "." + TYPE_DESCRIPTION + " AS lego_description" +
+          //          TABLE_SKINTYPES + "." + SKIN_DESCRIPTION + " AS skin_description" +
+                " FROM " + TABLE_DISPLAYS +
+                " WHERE " + PLACEMENTID + " = " + placementid;
+        //            " JOIN " + TABLE_CHAIN + " ON " +
+        //                TABLE_DISPLAYS + "." + CHAINID + " = " +
+        //                TABLE_CHAIN + "." + CHAINID +
+        //            " JOIN " + TABLE_STORE + " ON " +
+        //                TABLE_DISPLAYS + "." + STOREID + " = " +
+        //                TABLE_STORE + "." + STOREID +
+        //            " JOIN " + TABLE_LEGOTYPES + " ON " +
+        //                TABLE_DISPLAYS + "." + TYPEID + " = " +
+        //                TABLE_LEGOTYPES + "." + TYPEID +
+        //            " JOIN " + TABLE_SKINTYPES + " ON " +
+        //                TABLE_DISPLAYS + "." + SKINID + " = " +
+        //                TABLE_SKINTYPES + "." + SKINID;
 
-        Log.e(TAG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -392,6 +412,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         d.setInitalQty(c.getInt(c.getColumnIndex(INT_QTY)));
         d.setCurrentQty(c.getInt(c.getColumnIndex(CUR_QTY)));
         d.setResold(c.getInt(c.getColumnIndex(RESOLD)));
+        d.setChainid(c.getInt(c.getColumnIndex(CHAINID)));
+        d.setStoreid(c.getInt(c.getColumnIndex(STOREID)));
+        d.setSkinid(c.getInt(c.getColumnIndex(SKINID)));
+        d.setNotes(c.getString(c.getColumnIndex(NOTES)));
+        d.setRemovalDate(c.getLong(c.getColumnIndex(REMOVAL_DATE)));
+        d.setProductId(c.getInt(c.getColumnIndex(PRODUCT_ID)));
+        d.setWeeksUp(c.getInt(c.getColumnIndex(WEEKS_UP)));
+
+
+
 
         if (c !=null && !c.isClosed()) {
             c.close();
@@ -407,7 +437,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Displays> displays = new ArrayList<Displays>();
         String selectQuery = "SELECT * FROM " + TABLE_DISPLAYS;
 
-        Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -423,6 +452,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 d.setInitalQty(c.getInt(c.getColumnIndex(INT_QTY)));
                 d.setCurrentQty(c.getInt(c.getColumnIndex(CUR_QTY)));
                 d.setResold(c.getInt(c.getColumnIndex(RESOLD)));
+                d.setChainid(c.getInt(c.getColumnIndex(CHAINID)));
+                d.setStoreid(c.getInt(c.getColumnIndex(STOREID)));
+                d.setBrandId(c.getInt(c.getColumnIndex(BRAND_ID)));
 
                 //Add to list
                 displays.add(d);
@@ -433,7 +465,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (c !=null && !c.isClosed()) {
             c.close();
         }
-
         return displays;
 
 
@@ -443,7 +474,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Displays> displays = new ArrayList<Displays>();
         String selectQuery = "SELECT * FROM " + TABLE_DISPLAYS + " WHERE " + UP + "= 1 ";
 
-        Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -476,8 +506,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Chain> chains = new ArrayList<Chain>();
         String selectQuery = "SELECT * FROM " + TABLE_CHAIN;
 
-        Log.v(TAG, selectQuery);
-
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -487,7 +515,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 Chain ch = new Chain();
                 ch.setChainid(c.getInt(c.getColumnIndex(CHAINID)));
                 ch.setChainName(c.getString(c.getColumnIndex(CHAIN_NAME)));
-                    Log.v(TAG,"DH chain name is " + ch.getChainName() );
 
                 //Add to list
                 chains.add(ch);
@@ -549,13 +576,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return brands;
     }
 
+    public String getSingleBrand(int brandId){
+        String brandName = null;
+        String selectQuery = "SELECT * FROM " + TABLE_BRAND +
+                " WHERE " + TABLE_BRAND + "." + BRAND_ID + " = " + brandId;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.getCount()>0) {
+            c.moveToFirst();
+            brandName = c.getString(c.getColumnIndex(BRAND_DESCRIPTION));
+        }
+        c.close();
+        return brandName;
+    }
+
+
     public Chain getSingleChain(long chainid){
         //Get single display
         SQLiteDatabase db = this.getReadableDatabase();
 
         String selectQuery = "SELECT * FROM " + TABLE_CHAIN + " WHERE " + CHAINID + " = " + chainid;
-
-        Log.e(TAG, selectQuery);
 
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -583,7 +625,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     PRODUCT_ID + " = " + productId +
                     " OR " + PRODUCT_ID + " = 0" +
                " END " ;
-        Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -603,8 +644,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         if (c !=null && !c.isClosed()) {
             c.close();
         }
-
         return legotypes;
+    }
+
+    public String getSingleLegoType(int legoId){
+        String legoDescription = null;
+        String selectQuery = "SELECT * FROM " + TABLE_LEGOTYPES +
+                " WHERE " + TABLE_LEGOTYPES + "." + TYPEID + " = " + legoId;
+
+        SQLiteDatabase db=this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            legoDescription = c.getString(c.getColumnIndex(TYPE_DESCRIPTION));
+        }
+
+        c.close();
+        return legoDescription;
     }
 
     public List<Skin> getSkins(int legoId, int productId, int brandId){
@@ -658,7 +715,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_STORE +".CHAINID = " +
                 TABLE_CHAIN +".CHAINID";
 
-        Log.v(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -697,8 +753,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 TABLE_STORE +".CHAINID = " +
                 chainid;
 
-        Log.v(TAG, selectQuery);
-
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
 
@@ -714,7 +768,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 s.setStoreCity(c.getString(c.getColumnIndex(STORE_CITY)));
                 s.setStoreState(c.getString(c.getColumnIndex(STORE_STATE)));
                 s.setStoreZip(c.getString(c.getColumnIndex(STORE_ZIP)));
-        Log.v(TAG, "Store number is " + s.getStoreNumber());
 
                 //Add to list
                 stores.add(s);
@@ -729,11 +782,47 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return stores;
     }
 
+    public String getSingleStoreNumber(int storeId){
+        String storeNum = null;
+        String selectQuery = "SELECT * FROM " + TABLE_STORE +
+                " WHERE " + TABLE_STORE + "." + STOREID + " = " + storeId;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            storeNum = c.getString(c.getColumnIndex(STORE_NUM));
+        }
+        c.close();
+        return storeNum;
+    }
+
+    public String getSingleStoreLocation (int storeId) {
+        String storeCity = null;
+        String storeState = null;
+        String storeLocation = null;
+        String selectQuery = "SELECT * FROM " + TABLE_STORE +
+                " WHERE " + TABLE_STORE + "." + STOREID + " = " + storeId;
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        if (c.getCount() > 0) {
+            c.moveToFirst();
+            storeCity = c.getString(c.getColumnIndex(STORE_CITY));
+            storeState = c.getString(c.getColumnIndex(STORE_STATE));
+        }
+        c.close();
+        storeLocation = storeCity + ", " + storeState;
+        return storeLocation;
+    }
+
+
     public List<Inventory> getInventory() {
         List<Inventory> inv = new ArrayList<Inventory>();
         String selectQuery = "SELECT * FROM " + TABLE_INVENTORY;
 
-        Log.e(TAG, selectQuery);
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);

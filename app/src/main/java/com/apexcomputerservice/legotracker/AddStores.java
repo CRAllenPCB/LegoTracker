@@ -35,7 +35,6 @@ public class AddStores extends AppCompatActivity {
     Spinner spinner;
     DatabaseHelper helper;
     Store newStore;
-    String TAG="SQLInputCheck";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -74,7 +73,6 @@ public class AddStores extends AppCompatActivity {
                 Chain chainSelected = (Chain)parent.getItemAtPosition(pos);
                 chainId = chainSelected.getChainid();
                 chainName = chainSelected.getChainName();
-                Log.v(TAG, "Chain ID Selected = " + Integer.toString(chainId));
             }
             @Override
             public void onNothingSelected(AdapterView<?> adapterView){
@@ -105,38 +103,32 @@ public class AddStores extends AppCompatActivity {
             Toast.makeText(getApplicationContext(), "Store Number cannot be empty", Toast.LENGTH_SHORT).show();
         } else {
             int chainIdToAdd = chainId;
-            Log.v(TAG, "Chain ID To add = " + Integer.toString(chainIdToAdd));
             storeNumToAdd = addStoreNum.getText().toString();
             if (addAddress1 == null || addAddress1.getText().toString().trim().length() == 0){
                 address1ToAdd = "";
             } else {
                 address1ToAdd = addAddress1.getText().toString();
             }
-            Log.v(TAG, "Address 1 to add = " + address1ToAdd.toString());
             if (addAddress2 == null || addAddress2.getText().toString().trim().length() == 0){
                 address2ToAdd = null;
             } else{
                 address2ToAdd = addAddress2.getText().toString();
             }
-            Log.v(TAG, "Address 2 to add = " + address2ToAdd);
             if (addCity == null || addCity.getText().toString().trim().length() == 0){
                 cityToAdd = "";
             } else {
                 cityToAdd = addCity.getText().toString();
             }
-            Log.v(TAG, "City to add = " + cityToAdd);
             if (addState == null || addState.getText().toString().trim().length() == 0){
                 stateToAdd = "";
             } else{
                 stateToAdd = addState.getText().toString();
             }
-            Log.v(TAG, "State to add = " + stateToAdd);
             if (addZip == null || addZip.getText().toString().trim().length() == 0){
                 zipToAdd = "";
             } else {
                 zipToAdd = addZip.getText().toString();
             }
-            Log.v(TAG, "Zip to add = " + zipToAdd);
 
             helper = new DatabaseHelper(this);
             helper.openWriteableDB();

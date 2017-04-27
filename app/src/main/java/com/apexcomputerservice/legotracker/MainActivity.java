@@ -43,6 +43,7 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        //TODO Remove Stetho prior to release
         Stetho.initializeWithDefaults(this);
         setContentView(R.layout.test_layout);
 
@@ -74,8 +75,8 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         /*
         Used to delete and rebuild store table during testing - to be removed
          */
-        DatabaseHelper helper = new DatabaseHelper(this);
-        helper.resetStore();
+     //   DatabaseHelper helper = new DatabaseHelper(this);
+     //   helper.resetStore();
     }
 
 
