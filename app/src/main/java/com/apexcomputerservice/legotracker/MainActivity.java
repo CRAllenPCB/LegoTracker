@@ -151,7 +151,11 @@ public class MainActivity extends AppCompatActivity implements NavigationView.On
         public CharSequence getPageTitle(int position) {
             return mFragmentTitleList.get(position);
         }
+
+
     }
+
+
 
     //TODO Add Firebase crash reporting & anayltics
 

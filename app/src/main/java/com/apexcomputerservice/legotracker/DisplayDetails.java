@@ -13,9 +13,11 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.apexcomputerservice.legotracker.adapters.RVAdapterDisplay;
 import com.apexcomputerservice.legotracker.model.Displays;
@@ -35,6 +37,7 @@ public class DisplayDetails extends Fragment {
     boolean emptyTable;
     TextView emptyTextView;
     String TAG = "Tag";
+    private static final int DISPLAY_DETAILS_FRAGMENT_GROUP_ID = 1;
 
 
     public DisplayDetails(){
@@ -104,6 +107,18 @@ public class DisplayDetails extends Fragment {
         return view;
 
 
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+        //only this fragment's context menus have group ID of 1
+        if (item.getGroupId() == DISPLAY_DETAILS_FRAGMENT_GROUP_ID){
+            if (item.getTitle()=="Delete"){
+                mAdapter.removeDisplay();
+            }else if (item.getTitle() == "Edit"){
+            }
+        }
+        return super.onContextItemSelected(item);
     }
 
 

@@ -233,9 +233,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISPLAYS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STORE);
         db.execSQL(CREATE_TABLE_DISPLAYS);
-        db.execSQL(CREATE_TABLE_STORE);
 
 
 
@@ -445,6 +443,38 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Displays> displays = new ArrayList<Displays>();
         String selectQuery = "SELECT * FROM " + TABLE_DISPLAYS +
                 " WHERE " +CHAINID + " = " + chainid;
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        //Loop through all rows and add to list
+        if (c.moveToFirst()) {
+            do {
+                Displays d = new Displays();
+                d.setPlacementId(c.getInt(c.getColumnIndex(PLACEMENTID)));
+                d.setPlacementDate(c.getLong(c.getColumnIndex(PLACEMENT_DATE)));
+                d.setPlacementUp(c.getInt(c.getColumnIndex(UP)));
+                d.setTypeid(c.getInt(c.getColumnIndex(TYPE)));
+                d.setInitalQty(c.getInt(c.getColumnIndex(INT_QTY)));
+                d.setCurrentQty(c.getInt(c.getColumnIndex(CUR_QTY)));
+                d.setResold(c.getInt(c.getColumnIndex(RESOLD)));
+                d.setChainid(c.getInt(c.getColumnIndex(CHAINID)));
+                d.setStoreid(c.getInt(c.getColumnIndex(STOREID)));
+                d.setBrandId(c.getInt(c.getColumnIndex(BRAND_ID)));
+                //Add to list
+                displays.add(d);
+            } while (c.moveToNext());
+        }
+        if (c !=null && !c.isClosed()) {
+            c.close();
+        }
+        return displays;
+    }
+
+    public List<Displays> getDisplaysByStoreId(int storeid) {
+        List<Displays> displays = new ArrayList<Displays>();
+        String selectQuery = "SELECT * FROM " + TABLE_DISPLAYS +
+                " WHERE " +STOREID + " = " + storeid;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -953,6 +983,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteDisplayByChain(int chainid){
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_DISPLAYS, CHAINID + " = ?", new String[] {String.valueOf(chainid)});
+    }
+
+    public void deleteDisplayByStore(int storeid){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_DISPLAYS, STOREID + " = ?", new String[] {String.valueOf(storeid)});
     }
 
     public void deleteStore (int storeid) {

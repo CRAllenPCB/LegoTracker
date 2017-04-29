@@ -1,11 +1,14 @@
 package com.apexcomputerservice.legotracker.adapters;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -24,9 +27,11 @@ import java.util.List;
 
 public class RVAdapterDisplay extends RecyclerView.Adapter<RVAdapterDisplay.DisplayViewHolder> {
 
-    int selectedPos;
+    int selectedPos, displayid;
     private List<Displays> displays;
-    String TAG = "Check";
+    private Context context;
+    private static final int DISPLAY_DETAILS_FRAGMENT_GROUP_ID = 1;
+
 
     public class DisplayViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnCreateContextMenuListener{
 
@@ -61,9 +66,11 @@ public class RVAdapterDisplay extends RecyclerView.Adapter<RVAdapterDisplay.Disp
 
         @Override
         public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-            menu.add(0,0,0,"Edit");
-            menu.add(0,1,0,"Delete");
+            menu.add(DISPLAY_DETAILS_FRAGMENT_GROUP_ID,0,0,"Edit");
+            menu.add(DISPLAY_DETAILS_FRAGMENT_GROUP_ID,1,0,"Delete");
         }
+
+
     }
 
 
@@ -154,4 +161,42 @@ public class RVAdapterDisplay extends RecyclerView.Adapter<RVAdapterDisplay.Disp
     }
 
     //TODO Delete & Edits
+    public void removeDisplay(){
+        AlertDialog.Builder alertbuilder = new AlertDialog.Builder(getContext());
+        alertbuilder.setTitle("Delete Display");
+        alertbuilder.setMessage("This will delete the display. If reporting display taken down, choose Edit to report taken down. Continue?");
+        alertbuilder.setPositiveButton("Yes", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+                //contiue with delete
+                Displays d = displays.get(selectedPos);
+                displayid = d.getPlacementId();
+                    Log.v("TAG", "Placement ID is " + displayid);
+                proceedDelete(displayid);
+            }
+        });
+        alertbuilder.setNegativeButton("No", new DialogInterface.OnClickListener(){
+            public void onClick(DialogInterface dialog, int id){
+                dialog.cancel();
+            }
+        });
+        alertbuilder.setIcon(android.R.drawable.ic_dialog_alert);
+        AlertDialog alert = alertbuilder.create();
+        alert.show();
+
+
+
+
+    }
+
+    public void proceedDelete(int displayid){
+        DatabaseHelper helper2 = new DatabaseHelper(getContext());
+        helper2.openWriteableDB();
+        helper2.deleteDisplay(displayid);
+        //Remove from arraylist
+        displays.remove(selectedPos);
+        helper2.closeDB();
+        this.notifyItemChanged(selectedPos);
+
+    }
+
 }
