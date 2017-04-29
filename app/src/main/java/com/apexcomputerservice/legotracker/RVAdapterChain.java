@@ -1,6 +1,8 @@
 package com.apexcomputerservice.legotracker;
 
 import android.content.Context;
+import android.content.DialogInterface;
+import android.support.v7.app.AlertDialog;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
@@ -13,6 +15,9 @@ import android.widget.AdapterView;
 import android.widget.TextView;
 
 import com.apexcomputerservice.legotracker.model.Chain;
+import com.apexcomputerservice.legotracker.model.Displays;
+import com.apexcomputerservice.legotracker.model.Store;
+import com.facebook.stetho.inspector.protocol.module.Database;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -26,20 +31,23 @@ import java.util.List;
 public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainViewHolder> {
 
     int selectedPos;
+    private List<Chain> chains;
+    private Context context;
+    int chainid;
 
-    public class ChainViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener,View.OnCreateContextMenuListener {
+    //DatabaseHelper helper;
+    //final DatabaseHelper helper = new DatabaseHelper(context);
+
+    public class ChainViewHolder extends RecyclerView.ViewHolder implements View.OnLongClickListener, View.OnCreateContextMenuListener {
 
         public CardView cv;
         public TextView chainNameTextView;
         MyLongClickListener longClickListener;
 
-
-
-
-        public ChainViewHolder(View itemView){
+        public ChainViewHolder(View itemView) {
             super(itemView);
-            cv = (CardView)itemView.findViewById(R.id.cv_chain);
-            chainNameTextView = (TextView)itemView.findViewById(R.id.chain_name);
+            cv = (CardView) itemView.findViewById(R.id.cv_chain);
+            chainNameTextView = (TextView) itemView.findViewById(R.id.chain_name);
 
             itemView.setOnLongClickListener(this);
             itemView.setOnCreateContextMenuListener(this);
@@ -47,47 +55,39 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
 
         //Context Menu
 
-        public void setLongClickListener(MyLongClickListener longClickListener){
-            this.longClickListener=longClickListener;
+        public void setLongClickListener(MyLongClickListener longClickListener) {
+            this.longClickListener = longClickListener;
         }
 
-
         @Override
-        public boolean onLongClick(View v){
+        public boolean onLongClick(View v) {
             this.longClickListener.onLongClick(getLayoutPosition());
             return false;
         }
 
         @Override
-        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo){
-            menu.add(0,0,0,"Edit");
-            menu.add(0,1,0,"Delete");
-
+        public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
+            menu.add(0, 0, 0, "Edit");
+            menu.add(0, 1, 0, "Delete");
         }
-
-
     }
 
-    private List<Chain> chains;
-    private Context context;
-
-
-    public RVAdapterChain(Context context,List<Chain> chains){
-        this.chains=chains;
-        this.context=context;
+    public RVAdapterChain(Context context, List<Chain> chains) {
+        this.chains = chains;
+        this.context = context;
     }
 
-    private Context getContext(){
+    private Context getContext() {
         return context;
     }
 
     @Override
-    public void onAttachedToRecyclerView(RecyclerView recyclerView){
+    public void onAttachedToRecyclerView(RecyclerView recyclerView) {
         super.onAttachedToRecyclerView(recyclerView);
     }
 
     @Override
-    public RVAdapterChain.ChainViewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public RVAdapterChain.ChainViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         Context context = parent.getContext();
         LayoutInflater inflater = LayoutInflater.from(context);
         //Inflate custom layout
@@ -95,22 +95,19 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
         //Return a new holder instance
         ChainViewHolder viewHolder = new ChainViewHolder(chainview);
         return viewHolder;
-     }
+    }
 
     @Override
-    public void onBindViewHolder(RVAdapterChain.ChainViewHolder holder, int position){
-       holder.chainNameTextView.setText(chains.get(position).getChainName());
+    public void onBindViewHolder(RVAdapterChain.ChainViewHolder holder, int position) {
+        holder.chainNameTextView.setText(chains.get(position).getChainName());
 
-        holder.setLongClickListener(new MyLongClickListener(){
+        holder.setLongClickListener(new MyLongClickListener() {
             @Override
-            public void onLongClick(int pos){
-                selectedPos=pos;
+            public void onLongClick(int pos) {
+                selectedPos = pos;
             }
 
         });
-
-
-
        /*
         //Get the data model based on position
         Chain chain = chains.get(position);
@@ -122,28 +119,78 @@ public class RVAdapterChain extends RecyclerView.Adapter<RVAdapterChain.ChainVie
     }
 
     @Override
-    public int getItemCount(){
+    public int getItemCount() {
         return chains.size();
     }
 
-   //Delete Chain
-    public void removeChain(){
+    //TODO Edit Chain
+    //Delete Chain
+    public void removeChain() {
         //Get ID
         Chain c = chains.get(selectedPos);
-        int id =c.getChainid();
+        chainid = c.getChainid();
+        List<Store> stores = null;
 
         //Delete it from db
         DatabaseHelper helper = new DatabaseHelper(context);
         helper.openWriteableDB();
         //*****Add if condition here to check first for stores and displays associated with Chain
         // Delete from database
-        helper.deleteChain(id);
-        //Remove from arraylist
-        chains.remove(selectedPos);
+        stores = helper.getChainStores(chainid);
+        final int storesEffected = stores.size();
+        if (storesEffected > 0) {
+            List<Displays> displays = null;
+            displays = helper.getDisplaysByChainId(chainid);
+            final int displaysEffected = displays.size();
+           // helper.closeDB();
+            AlertDialog.Builder alertBuilder1 = new AlertDialog.Builder(context);
+            alertBuilder1.setTitle("Delete Chain");
+            if (displaysEffected > 0) {
+                alertBuilder1.setMessage("This chain has " + storesEffected + " stores and " + displaysEffected + " displays that will also be deleted. Continue?");
+            } else {
+                alertBuilder1.setMessage("This chain has " + storesEffected + " stores that will also be deleted. Continue?");
+            }
+            alertBuilder1.setPositiveButton("Yes", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int id) {
+                    //continue with delete
+
+                    proceed(chainid, storesEffected, displaysEffected);
+
+                }
+            });
+            alertBuilder1.setNegativeButton("No", new DialogInterface.OnClickListener() {
+                public void onClick(DialogInterface dialog, int which) {
+                    //do nothing
+                    dialog.cancel();
+                }
+            });
+            alertBuilder1.setIcon(android.R.drawable.ic_dialog_alert);
+            AlertDialog alert1 = alertBuilder1.create();
+            alert1.show();
+        } else {
+            proceed(chainid, 0, 0);
+        }
         helper.closeDB();
-        this.notifyItemRemoved(selectedPos);
     }
 
+
+
+    public void proceed(int chainId, int stores, int displays) {
+        DatabaseHelper helper2 = new DatabaseHelper(context);
+        helper2.openWriteableDB();
+        helper2.deleteChain(chainId);
+        if (stores > 0) {
+            helper2.deleteStoreByChain(chainId);
+        }
+        if (displays > 0) {
+            helper2.deleteDisplayByChain(chainId);
+        }
+        //Remove from arraylist
+        chains.remove(selectedPos);
+        helper2.closeDB();
+        this.notifyItemRemoved(selectedPos);
+
+    }
 
 }
 

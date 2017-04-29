@@ -31,7 +31,6 @@ public class ShowStores extends AppCompatActivity {
     private final static String TABLE_NAME ="stores";//Name of the storeTable
     boolean emptyTable;
     TextView emptyTextView;
-    Toolbar toolbar;
     Context context;
 
 

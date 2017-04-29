@@ -82,6 +82,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     private static final String STORE_CITY = "storeCity";
     private static final String STORE_STATE ="storeState";
     private static final String STORE_ZIP = "storeZip";
+    private static final String LATITUDE = "latitude";
+    private static final String LONGITUDE = "longitude";
 
     //Inventory Table Names
     private static final String TABLE_INVENTORY = "inventory";
@@ -143,7 +145,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             STORE_ADD2 + " TEXT, " +
             STORE_CITY + " TEXT, " +
             STORE_STATE + " TEXT, " +
-            STORE_ZIP + " TEXT" + ")";
+            STORE_ZIP + " TEXT, " +
+            LATITUDE + " TEXT, " +
+            LONGITUDE + " TEXT" + ")";
     private static final String CREATE_INVENTORY_TABLE = "CREATE TABLE " +
             TABLE_INVENTORY + "(" +
             INV_ID + " INTEGER PRIMARY KEY, " +
@@ -229,7 +233,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getWritableDatabase();
 
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_DISPLAYS);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_STORE);
         db.execSQL(CREATE_TABLE_DISPLAYS);
+        db.execSQL(CREATE_TABLE_STORE);
 
 
 
@@ -355,6 +361,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         values.put(STORE_CITY, store.getStoreCity());
         values.put(STORE_STATE, store.getStoreState());
         values.put(STORE_ZIP, store.getStoreZip());
+        values.put(LATITUDE,store.getLat());
+        values.put(LONGITUDE, store.getLng());
 
         db.insert(TABLE_STORE, null, values);
         db.close();
@@ -433,10 +441,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    public List<Displays> getAllDisplays() {
+    public List<Displays> getDisplaysByChainId(int chainid) {
         List<Displays> displays = new ArrayList<Displays>();
-        String selectQuery = "SELECT * FROM " + TABLE_DISPLAYS;
-
+        String selectQuery = "SELECT * FROM " + TABLE_DISPLAYS +
+                " WHERE " +CHAINID + " = " + chainid;
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor c = db.rawQuery(selectQuery, null);
@@ -455,19 +463,45 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 d.setChainid(c.getInt(c.getColumnIndex(CHAINID)));
                 d.setStoreid(c.getInt(c.getColumnIndex(STOREID)));
                 d.setBrandId(c.getInt(c.getColumnIndex(BRAND_ID)));
-
                 //Add to list
                 displays.add(d);
             } while (c.moveToNext());
-
         }
-
         if (c !=null && !c.isClosed()) {
             c.close();
         }
         return displays;
+    }
 
+    public List<Displays> getAllDisplays() {
+        List<Displays> displays = new ArrayList<Displays>();
+        String selectQuery = "SELECT * FROM " + TABLE_DISPLAYS;
 
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor c = db.rawQuery(selectQuery, null);
+
+        //Loop through all rows and add to list
+        if (c.moveToFirst()) {
+            do {
+                Displays d = new Displays();
+                d.setPlacementId(c.getInt(c.getColumnIndex(PLACEMENTID)));
+                d.setPlacementDate(c.getLong(c.getColumnIndex(PLACEMENT_DATE)));
+                d.setPlacementUp(c.getInt(c.getColumnIndex(UP)));
+                d.setTypeid(c.getInt(c.getColumnIndex(TYPE)));
+                d.setInitalQty(c.getInt(c.getColumnIndex(INT_QTY)));
+                d.setCurrentQty(c.getInt(c.getColumnIndex(CUR_QTY)));
+                d.setResold(c.getInt(c.getColumnIndex(RESOLD)));
+                d.setChainid(c.getInt(c.getColumnIndex(CHAINID)));
+                d.setStoreid(c.getInt(c.getColumnIndex(STOREID)));
+                d.setBrandId(c.getInt(c.getColumnIndex(BRAND_ID)));
+                //Add to list
+                displays.add(d);
+            } while (c.moveToNext());
+        }
+        if (c !=null && !c.isClosed()) {
+            c.close();
+        }
+        return displays;
     }
 
     public List<Displays> getActiveDisplays() {
@@ -908,6 +942,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public void deleteChain(int chainid) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_CHAIN, CHAINID + " = ?", new String[] {String.valueOf(chainid)});
+            Log.v("TAG", "Chain " + chainid + " deleted");
     }
 
     public void deleteDisplay(int displayid){
@@ -915,9 +950,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.delete(TABLE_DISPLAYS, PLACEMENTID + " = ?", new String[] {String.valueOf(displayid)});
     }
 
+    public void deleteDisplayByChain(int chainid){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete(TABLE_DISPLAYS, CHAINID + " = ?", new String[] {String.valueOf(chainid)});
+    }
+
     public void deleteStore (int storeid) {
         SQLiteDatabase db = this.getWritableDatabase();
         db.delete(TABLE_STORE, STOREID + " = ?", new String[] {String.valueOf(storeid)});
+    }
+
+    public void deleteStoreByChain (int chainid){
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.delete (TABLE_STORE, CHAINID + " = ?", new String[] {String.valueOf(chainid)});
+
     }
 
     //*********** Close Database **********************************

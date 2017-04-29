@@ -9,7 +9,7 @@ public class Store {
     //private variables
     int storeid;
     int chainid;
-    String storeNumber, storeAddress1, storeAddress2, storeCity, storeState, storeZip;
+    String storeNumber, storeAddress1, storeAddress2, storeCity, storeState, storeZip , lat, lng;
 
     //empty constructor
     public Store(){
@@ -17,7 +17,7 @@ public class Store {
     }
 
     //constructor
-    public Store(int storeid, int chainid, String storeNumber, String storeAddress1, String storeAddress2, String storeCity, String storeState, String storeZip){
+    public Store(int storeid, int chainid, String storeNumber, String storeAddress1, String storeAddress2, String storeCity, String storeState, String storeZip, String lat, String lng){
         this.storeid = storeid;
         this.chainid = chainid;
         this.storeNumber = storeNumber;
@@ -26,6 +26,8 @@ public class Store {
         this.storeCity = storeCity;
         this.storeState = storeState;
         this.storeZip = storeZip;
+        this.lat = lat;
+        this.lng = lng;
     }
 
     public int getStoreid() {
@@ -90,6 +92,22 @@ public class Store {
 
     public void setStoreZip(String storeZip) {
         this.storeZip = storeZip;
+    }
+
+    public String getLat() {
+        return lat;
+    }
+
+    public void setLat(String lat) {
+        this.lat = lat;
+    }
+
+    public String getLng() {
+        return lng;
+    }
+
+    public void setLng(String lng) {
+        this.lng = lng;
     }
 
     //Override toString() so chainName will show in Spinner

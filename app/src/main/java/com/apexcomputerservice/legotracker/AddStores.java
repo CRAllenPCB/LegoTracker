@@ -1,5 +1,7 @@
 package com.apexcomputerservice.legotracker;
 
+import android.location.Address;
+import android.location.Geocoder;
 import android.support.v7.app.ActionBar;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -16,7 +18,9 @@ import android.widget.Toast;
 
 import com.apexcomputerservice.legotracker.model.Chain;
 import com.apexcomputerservice.legotracker.model.Store;
+import com.google.android.gms.maps.model.LatLng;
 
+import java.io.IOException;
 import java.util.List;
 
 public class AddStores extends AppCompatActivity {
@@ -96,7 +100,6 @@ public class AddStores extends AppCompatActivity {
         //Pull chain id from above
         String storeNumToAdd, address1ToAdd, address2ToAdd,cityToAdd,stateToAdd,zipToAdd;
 
-
         boolean isEmpty = addStoreNum == null || addStoreNum.getText().toString().trim().length() == 0;
 
         if (isEmpty){
@@ -130,11 +133,33 @@ public class AddStores extends AppCompatActivity {
                 zipToAdd = addZip.getText().toString();
             }
 
+            //TODO Add a way to identfy stores without LatLng set (not found) and allow to set LatLng at current location
+            String fullAddress = address1ToAdd + ", " + cityToAdd + ", " + stateToAdd + " " + zipToAdd;
+            String fullStoreName = chainName + " " + storeNumToAdd;
+            LatLng latLong;
+                Log.v("TAG", "Show address: " + fullAddress);
+                Log.v("TAG", "Full store name is " + fullStoreName);
+            latLong = getLocationFromAddress(fullAddress);
+                Log.v("TAG", "Location is " + latLong);
+            String latString = null;
+            String lngString = null;
+            if (latLong == null) {
+                latLong = getLocationFromName(fullStoreName);}
+            Double latDouble = latLong.latitude;
+                    Log.v("TAG", "Double Lat is " + latDouble);
+            Double lngDouble = latLong.longitude;
+                    Log.v("TAG", "Dobule Long is " + lngDouble);
+            latString = latDouble.toString();
+            lngString = lngDouble.toString();
+
+
+                    Log.v("TAG", "Lat String is " + latString);
+                    Log.v("TAG", "Lng String is " + lngString);
+
             helper = new DatabaseHelper(this);
             helper.openWriteableDB();
 
             newStore = new Store();
-            //Set Chain id
             newStore.setChainid(chainIdToAdd);
             newStore.setStoreNumber(storeNumToAdd);
             newStore.setStoreAddress1(address1ToAdd);
@@ -142,6 +167,8 @@ public class AddStores extends AppCompatActivity {
             newStore.setStoreCity(cityToAdd);
             newStore.setStoreState(stateToAdd);
             newStore.setStoreZip(zipToAdd);
+            newStore.setLat(latString);
+            newStore.setLng(lngString);
             helper.addStore(newStore);
             helper.closeDB();
 
@@ -163,5 +190,65 @@ public class AddStores extends AppCompatActivity {
         //Attach dat adapter to spinner
         spinner.setAdapter(dataAdapter);
 
+    }
+
+    public LatLng getLocationFromAddress(String strAddress){
+
+        Geocoder coder = new Geocoder(this);
+        List<Address> address;
+        LatLng p1 = null;
+
+        try {
+            //May throw an IOException
+            address = coder.getFromLocationName(strAddress, 1);
+                Log.v("TAG", "Size of array is " + address.size());
+            if (address == null) {
+                return null;
+            }
+            if (address.size() == 0){
+                return null;
+            }
+            Address location = address.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return p1;
+    }
+
+    public LatLng getLocationFromName(String strName){
+
+        Geocoder coder = new Geocoder(this);
+        List<Address> name;
+        LatLng p1 = null;
+
+        try {
+            //May throw an IOException
+            name = coder.getFromLocationName(strName, 1);
+            Log.v("TAG", "Size of array is " + name.size());
+            if (name == null) {
+                return null;
+            }
+            if (name.size() == 0){
+                return null;
+            }
+            Address location = name.get(0);
+            location.getLatitude();
+            location.getLongitude();
+
+            p1 = new LatLng(location.getLatitude(), location.getLongitude());
+
+
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+
+        return p1;
     }
 }
